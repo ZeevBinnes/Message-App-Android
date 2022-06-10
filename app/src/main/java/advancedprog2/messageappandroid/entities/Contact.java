@@ -8,16 +8,16 @@ public class Contact {
     @PrimaryKey
     private String id;
     private String name;
-    private String Server;
-    private String Last;
-    private String Lastdate;
+    private String server;
+    private String last;
+    private String lastdate;
 
     public Contact(String id, String name, String server, String last, String time) {
         this.id = id;
         this.name = name;
-        Server = server;
-        Last = last;
-        Lastdate = time;
+        this.server = server;
+        this.last = last;
+        this.lastdate = time;
     }
 
     public String getId() {
@@ -37,26 +37,26 @@ public class Contact {
     }
 
     public String getServer() {
-        return Server;
+        return server;
     }
 
     public void setServer(String server) {
-        Server = server;
+        this.server = server;
     }
 
     public String getLast() {
-        return Last;
+        return last;
     }
 
     public void setLast(String last) {
-        Last = last;
+        this.last = last;
     }
 
     public String getLastdate() {
-        return Lastdate;
+        return lastdate;
     }
 
     public void setLastdate(String lastdate) {
-        Lastdate = lastdate;
+        this.lastdate = lastdate;
     }
 }

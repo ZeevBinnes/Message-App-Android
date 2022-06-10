@@ -22,5 +22,11 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, ContactsActivity.class);
             startActivity(intent);
         });
+
+        Button btnToChat = findViewById(R.id.btnToChat);
+        btnToChat.setOnClickListener(view -> {
+            Intent intent = new Intent(this, ChatActivity.class);
+            startActivity(intent);
+        });
     }
 }
