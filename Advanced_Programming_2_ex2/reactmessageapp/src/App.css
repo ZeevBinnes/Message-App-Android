@@ -1,0 +1,71 @@
+.app{
+    display: grid;
+    place-items: center;
+    background-image: url("data/lake.jpg");
+    background-size:cover;
+    height: 100vh;
+    min-width: 650px;
+}
+
+.login{
+    display: flex;
+    background-color: white;
+    box-shadow: -1px 4px 20px -6px black;
+}
+
+.login > form{
+    padding: 20px;
+    background-color: white;
+    box-shadow: -1px 4px 20px -6px black;
+}
+
+.linkFont {
+    color: blue;
+    cursor: pointer;
+}
+
+.err_alert {
+    color: red;
+}
+
+.user_app{
+    display: flex;
+    background-color: whitesmoke;
+    height: 90vh;
+    width: 90vw;
+    min-width: 590px;
+    box-shadow: -1px 4px 20px -6px black;
+}
+
+.proph_imgs {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    text-align: center;
+    vertical-align: middle;
+    object-fit: cover;
+}
+
+
+
+.chat__contact-wrapper {
+    flex: 1;
+}
+
+.chat__contact-name {
+    color: #000000;
+    font-size: 1rem;
+    margin-bottom: 2px;
+    padding-left: 0.5vw;
+}
+
+.chat__contact-name {
+    color: #000000;
+    font-size: 1rem;
+    margin-bottom: 2px;
+    padding-left: 1vw;
+}
+
+.limit_column_height {
+    height: 90vh;
+}

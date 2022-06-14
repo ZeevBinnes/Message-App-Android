@@ -1,0 +1,102 @@
+
+.user_bar{
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+    border-right: 1px solid lightgray;
+    align-items: center;
+    min-width: 10vw;
+    height: 70px;
+}
+
+.chats_search{
+    display: flex;
+    align-items: center;
+    background-color: #f6f6f6;
+}
+
+.form-control{
+    height: 30px;
+}
+
+.chat__contact-wrapper {
+    flex: 1;
+}
+
+.chat__contact-name{
+    font-size: 20px;
+}
+
+.list-group-item {
+    background-color: transparent;
+}
+
+.chat_list_item {
+    background-color: transparent;
+    width: 100%;
+    height: 75px;
+    padding: 5px;
+    overflow-x: hidden;
+    display: flex;
+    align-items: center;
+}
+
+.chat_list_item:hover {
+    background-color: rgb(240, 240, 240);
+    cursor: pointer;
+}
+
+.contacts_content {
+    overflow: hidden;
+    flex: 1;
+}
+
+.contacts_spaces {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+
+.name_in_chat_list {
+    width: 79%;
+    padding-left: 7px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.hour_and_time {
+    padding-right: 0;
+    padding-left: 0;
+    text-align: right;
+    width: 40px;
+    /*font-size: smaller;*/
+    white-space: pre-line;
+    overflow: hidden;
+    font-size: 0.8rem;
+    color: rgba(0, 0, 0, 0.9);
+}
+
+.message_preview {
+    margin-left: 7px;
+    padding-right: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.sidebar {
+    min-width: 250px;
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    padding: 0;
+    border-right: 1px solid #DADADA;
+}
+
+.contacts_list {
+    overflow-x:hidden;
+    overflow-y: auto;
+
+}

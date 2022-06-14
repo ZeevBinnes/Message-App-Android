@@ -1,0 +1,244 @@
+.chatbox {
+    flex: 1;
+    flex-direction: column;
+    display: flex;
+    min-width: 0;
+}
+
+.chat_header{
+    padding: 20px;
+    display: flex;
+    height: 101px;
+    align-items: center;
+    border-bottom: 1px solid lightgrey;
+    background-color: rgb(240, 240, 240);
+}
+
+.chat_header_text{
+    flex: 1;
+    padding-left: 20px;
+    font-weight: 500;
+}
+
+.chat_body{
+    flex: 1;
+    padding: 20px;
+}
+
+.chat_bar > form{
+    flex: 1;
+    display: flex;
+    padding: 10px;
+}
+
+.chat_bar > form > input{
+    flex: 1;
+    border-radius: 30px;
+    padding: 10px;
+    border: none;
+
+}
+
+.cont_imgs{
+    width: 67px;
+    height: 67px;
+    border-radius: 50%;
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* body of chatbox */
+
+.chat__msg-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
+    position: relative;
+}
+
+.chat__msg {
+    padding: 6px 7px 8px 9px;
+    margin-bottom: 12px;
+    font-size: 0.85rem;
+    color: #000000;
+    width: fit-content;
+    max-width: 95%;
+    line-height: 20px;
+    border-radius: 5px;
+    position: relative;
+    white-space: pre-line;
+    display: flex;
+    word-break: break-word;
+}
+
+.chat__msg.chat__img-wrapper {
+    padding: 4px;
+    width: 95%;
+    max-width: 300px; /* added */
+}
+
+.chat__msg--sent {
+    background: #DBF8C6;
+    align-self: flex-end;
+}
+
+.chat__msg--rxd {
+    background: white;
+    align-self: flex-start;
+}
+
+.chat__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.chat__msg-filler {
+    width: 65px;
+    display: inline-block;
+    height: 3px;
+    background: transparent;
+}
+
+.fill{
+    background-color: #E4DCD4;
+    width: 100%;
+    height: 100%;
+}
+
+.mes{
+    margin-right: 5px;
+}
+
+.chat__msg-footer {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    right: 7px;
+    bottom: 3px;
+    color: rgba(0, 0, 0, 0.45);
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+.chat__img-wrapper .chat__msg-footer {
+    color: white;
+}
+
+.chat__content {
+    flex: 1;
+    position: relative;
+    background: #E4DCD4;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding: 20px 5% 2pc;
+}
+
+/* Chat Footer Toolbar */
+
+.chat__input-wrapper {
+    padding: 10px;
+    height: 60px;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.chat__input-icon {
+    color: #919191;
+    margin-left: 8px;
+    margin-right: 8px;
+    width: 28px;
+    height: 28px;
+    padding: 3px;
+    border-radius: 50%;
+}
+
+.chat__attach {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    bottom: 50px;
+}
+
+.chat__attach-btn {
+    transform: scale(0);
+    opacity: 0;
+    transition: all 0.5s ease;
+    display: none;
+    height: fit-content;
+    position: center;
+}
+
+.chat__attach--active .chat__attach-btn {
+    transform: scale(1);
+    opacity: 1;
+    display: flex;
+}
+
+.chat__attach-btn {
+    margin-bottom: 10px;
+}
+
+.chat__input-icon--pressed {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.chat__input {
+    background: white;
+    color: rgb(74, 74, 74);
+    padding: 20px 10px;
+    border-radius: 22px;
+    flex: 1;
+    height: 100%;
+}
+
+.chat__input::placeholder {
+    color: rgb(153, 153, 153);
+    font-size: 0.9rem;
+}
+
+/* End Chat Footer Toolbar */
+
+.controls-container {
+    height: 15%;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    padding: 0.5rem;
+  }
+
+  .recorder-display {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    font-size: 2rem;
+  }
+
+  .recording-indicator {
+    width: 10px;
+    height: 10px;
+    margin-right: 0.5rem;
+    border-radius: 50%;
+    background-color: #fd1c03;
+    animation-name: animated-block;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+  }
+  
+  .recording-time {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .cancel-button {
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+  }
+  
+  .cancel-button:hover {
+    color: #fd1c03;
+  }

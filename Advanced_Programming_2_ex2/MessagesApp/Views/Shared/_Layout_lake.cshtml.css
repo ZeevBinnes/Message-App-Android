@@ -1,0 +1,21 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+
+.lake {
+    display: grid;
+    place-items: center;
+    background-image: url("./lake.jpg");
+    background-size: cover;
+    height: 100vh;
+    min-width: 650px;
+}
+
+.app_box {
+    /*   display: flex;*/
+    background-color: whitesmoke;
+    height: 90vh;
+    max-width: 90vw;
+    min-width: 590px;
+    min-height 500px;
+    box-shadow: -1px 4px 20px -6px black;
+}
