@@ -45,5 +45,6 @@ public class ContactsActivity extends AppCompatActivity {
 
         adapter.setContacts(contactsList);
 
+
     }
 }
