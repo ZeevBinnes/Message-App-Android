@@ -17,6 +17,7 @@ import advancedprog2.messageappandroid.R;
 import advancedprog2.messageappandroid.activities.ChatActivity;
 import advancedprog2.messageappandroid.activities.ContactsActivity;
 import advancedprog2.messageappandroid.entities.Contact;
+import advancedprog2.messageappandroid.toShowClasses.ContactToShow;
 
 public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapter.ContactViewHolder> {
 
@@ -36,7 +37,7 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
     }
 
     private final LayoutInflater mInflater;
-    public List<Contact> contacts;
+    public List<ContactToShow> contacts;
     private Context context;
 
     public ContactsListAdapter(Context context) {
@@ -54,7 +55,7 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
     @Override
     public void onBindViewHolder(@NonNull ContactViewHolder holder, int position) {
         if (contacts != null) {
-            final Contact current = contacts.get(position);
+            final ContactToShow current = contacts.get(position);
             holder.tvName.setText(current.getName());
             holder.tvContent.setText(current.getLast());
             holder.tvTime.setText(current.getLastdate());
@@ -69,7 +70,7 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
         }
     }
 
-    public void setContacts(List<Contact> contactsList) {
+    public void setContacts(List<ContactToShow> contactsList) {
         contacts = contactsList;
         notifyDataSetChanged();
     }

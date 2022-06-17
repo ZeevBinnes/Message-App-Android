@@ -4,20 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.MainActivity" >
+    android:orientation="vertical"
+    tools:context=".activities.MainActivity">
 
     <Button
         android:id="@+id/btnToContacts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:text="Contacts" />
 
     <Button
         android:id="@+id/btnToChat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:text="Chat" />
+
+    <Button
+        android:id="@+id/btnToLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Login" />
+
+    <Button
+        android:id="@+id/btnToRegister"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Register" />
 
 </LinearLayout>
