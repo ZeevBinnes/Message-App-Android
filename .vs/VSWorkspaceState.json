@@ -1,8 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Advanced_Programming_2_ex2"
+    "\\Advanced_Programming_2_ex2",
+    "\\Advanced_Programming_2_ex2\\MessagesApp",
+    "\\Advanced_Programming_2_ex2\\MessagesApp\\Data"
   ],
-  "SelectedNode": "\\Advanced_Programming_2_ex2\\MessagesApp.sln",
+  "SelectedNode": "\\Advanced_Programming_2_ex2\\MessagesApp\\Data\\MessagesAppContext.cs",
   "PreviewInSolutionExplorer": false
 }

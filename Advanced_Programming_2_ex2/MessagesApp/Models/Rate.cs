@@ -11,7 +11,7 @@ namespace MessagesApp.Models
         [Range(1, 5)]
         public int NumRate { get; set; }
 
-        public string? Feedback { get; set; }
+        public string Feedback { get; set; }
 
         public DateTime Time { get; set; }
 

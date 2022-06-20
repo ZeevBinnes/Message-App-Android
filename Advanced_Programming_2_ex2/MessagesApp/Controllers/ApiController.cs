@@ -3,19 +3,26 @@ using MessagesApp.Services;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Cors;
 using MessagesApp.Hubs;
+using MessagesApp.Models;
+using Microsoft.EntityFrameworkCore;
+using MessagesApp.Data;
 
 namespace MessagesApp.Controllers
 {
     [Route("api")]
     [ApiController]
-    public class MainController : ControllerBase
+    public class ApiController : ControllerBase
     {
-        private readonly IHubContext<ChatHub> hub;
-        private static AppService service = AppService.CreateAppService();
 
-        public MainController(IHubContext<ChatHub> hubContext)
+        private readonly IHubContext<ChatHub> hub;
+        private readonly MessagesAppContext _context;
+
+
+
+        public ApiController(IHubContext<ChatHub> hubContext, MessagesAppContext context)
         {
             this.hub = hubContext;
+            _context = context;
         }
 
         public class LoginFormat
@@ -25,170 +32,277 @@ namespace MessagesApp.Controllers
         }
         public class ApiFormat
         {
-            public string? from { get; set; }
-            public string? to { get; set; }
-            public string? content { get; set; }
-            public string? server { get; set; }
+            public string from { get; set; }
+            public string to { get; set; }
+            public string content { get; set; }
+            public string server { get; set; }
         }
 
 
 
         [HttpPost("login", Name = "Login")]
-        public IActionResult Login([FromBody] LoginFormat data)
+        public async Task<IActionResult> Login([FromBody] LoginFormat data)
         {
-            int s = service.ApiLogin(data.id, data.pass);
-            switch (s)
+            if (data.id == null || _context.Users == null)
             {
-                case 0: return NotFound();
-                case 1: return Ok();
+                return NotFound();
+            }
+
+            var user = await _context.Users.FindAsync(data.id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            if (user.Password == data.pass)
+            {
+                return Ok();
             }
             return BadRequest();
         }
 
         [HttpPost("register", Name = "Register")]
-        public IActionResult Register([FromBody] LoginFormat data)
+        public async Task<IActionResult> Register([FromBody] LoginFormat data)
         {
-            bool s = service.ApiAddUser(data.id, data.pass);
-            if (s) { return StatusCode(200); };
-            return BadRequest();
+            if (data.id == null || _context.Users == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _context.Users.FindAsync(data.id);
+            if (user != null)
+            {
+                return NotFound();
+            }
+            user = new User();
+            user.Userid = data.id;
+            user.Password = data.pass;
+            _context.Add(user);
+            await _context.SaveChangesAsync();
+            return StatusCode(200);
+
         }
 
 
         [HttpGet("contacts", Name = "GetContacts")]
-        public IActionResult GetContacts(string user)
+        public async Task<IActionResult> GetContacts(string user)
         {
-            // return all contacts of the connected user in JSON
-            List<Json_Contact> contacts = service.ApiGetContacts(user);
-
-            if (contacts != null)
+            if (user == null || _context.Contacts == null)
             {
-                return Ok(contacts);
+                return NotFound();
             }
-            // find a way to send error
-            return NotFound();
+
+            var _user = await _context.Users.FindAsync(user);
+            if (_user == null)
+            {
+                return NotFound();
+            }
+            var contacts = await _context.Contacts.Where(c => c.Userid == user).ToListAsync();
+            List<JsonContact> ret = new List<JsonContact>();
+            foreach (Contact c in contacts)
+            {
+                ret.Add(JsonContact.GetJsonContact(c));
+            }
+
+            return Ok(ret);
+
         }
 
         [HttpGet("contacts/{id}", Name = "GetContact")]
-        public IActionResult GetContact(string user, string id)
+        public async Task<IActionResult> GetContact(string user, string id)
         {
-            Json_Contact contact = service.ApiGetContact(user, id);
-
-            if (contact == null)
+            if (user == null || _context.Users == null || _context.Contacts == null)
             {
                 return NotFound();
             }
-            return Ok(contact);
+
+            var _user = await _context.Users.FindAsync(user);
+            if (_user == null)
+            {
+                return NotFound();
+            }
+            var contact = await _context.Contacts.Where(c => c.Userid == user).SingleAsync(c => c.Contactid == id);
+            if (contact == null) { return NotFound(); }
+            JsonContact jcontact = JsonContact.GetJsonContact(contact);
+            return Ok(jcontact);
         }
 
         [HttpPost("contacts", Name = "PostContact")]
-        public IActionResult AddContact(string user,
-                  [FromBody] Json_Contact contact)
+        public async Task<IActionResult> AddContact(string user,
+                  [FromBody] JsonContact contact)
         {
-            bool s = service.ApiAddContact(user, contact);
-            if (s) { return StatusCode(201); };
-            return BadRequest();
+            if (user == null || contact == null || _context.Contacts == null)
+            {
+                return BadRequest();
+            }
+            var _user = await _context.Users.FindAsync(user);
+            if (_user == null) { return BadRequest(); }
+            var exist = await _context.Contacts.AnyAsync(c => c.Userid == user && c.Contactid == contact.Id);
+            if (exist) { return BadRequest(); }
+            var _contact = new Contact();
+            _contact.Userid = user;
+            _contact.Contactid = contact.Id;
+            _contact.Nickname = contact.Name;
+            _contact.Server = contact.Server;
+            _contact.LastContent = null;
+            _contact.LastDate = DateTime.Now;
+            _context.Contacts.Add(_contact);
+            await _context.SaveChangesAsync();
+            return StatusCode(201);
         }
 
         [HttpPut("contacts/{id}", Name = "PutContact")]
-        public IActionResult PutContact(string user, string id,
-                  [FromBody] Json_Contact contact)
+        public async Task<IActionResult> PutContact(string user, string id,
+                  [FromBody] JsonContact contact)
         {
-            contact.Id = id;
-            bool s = service.ApiEditContact(user, id, contact);
-            if (s) { return StatusCode(204); };
-            return NotFound();
-        }
-
-        [HttpDelete("contacts/{id}", Name = "DeleteContact")]
-        public IActionResult DeleteContact(string user, string id)
-        {
-            bool s = service.ApiDeleteContact(user, id);
-            if (s) { return StatusCode(204); };
-            return NotFound();
-        }
-
-        [HttpPost("invitations", Name = "Invitations")]
-        public IActionResult Invitations([FromBody] ApiFormat data)
-        {
-            Json_Contact contact = new Json_Contact();
-            contact.Server = data.server;
-            contact.Id = data.from;
-            contact.Name = data.from;
-            bool s = service.ApiAddContact(data.to, contact);
-            if (s)
-            {
-                hub.Clients.Group(data.to).SendAsync("ReceiveMessage");
-                return StatusCode(201);
-            };
-            return BadRequest();
-        }
-
-        [HttpPost("transfer", Name = "Transfer")]
-        public IActionResult Transfer([FromBody] ApiFormat data)
-        {
-            bool s = service.ApiAddMessage(data.to, data.from, data.content, false);
-            if (s)
-            {
-                if (hub.Clients.User(data.to) != null)
-                {
-                    hub.Clients.Group(data.to).SendAsync("ReceiveMessage");
-                }
-                return StatusCode(201);
-            };
-            return BadRequest();
-        }
-
-        [HttpGet("contacts/{id}/messages", Name = "GetMessages")]
-        public IActionResult GetMessages(string user, string id)
-        {
-            // return all Messages of the connected user in JSON
-            List<Json_Message> ret = service.ApiGetMessages(user, id);
-
-            if (ret == null)
+            if (id == null || contact == null || _context.Contacts == null)
             {
                 return NotFound();
             }
-            // find a way to send error
+            if (contact == null) { return NotFound(); }
+            var _user = await _context.Users.FindAsync(user);
+            if (_user == null) { return NotFound(); }
+            var _contact = await _context.Contacts.Where(c => c.Userid == user).SingleAsync(c => c.Contactid == contact.Id);
+            if (_contact == null) { return NotFound(); }
+            _contact.Nickname = contact.Name;
+            _contact.Server = contact.Server;
+            _context.Entry(_contact).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return StatusCode(204);
+        }
+
+        [HttpDelete("contacts/{id}", Name = "DeleteContact")]
+        public async Task<IActionResult> DeleteContact(string user, string id)
+        {
+            var _user = await _context.Users.FindAsync(user);
+            if (_user == null) { return NotFound(); }
+            var contact = await _context.Contacts.Where(c => c.Userid == user).SingleAsync(c => c.Contactid == id);
+            if (contact == null) { return NotFound(); }
+            _context.Contacts.Remove(contact);
+            await _context.SaveChangesAsync();
+            return StatusCode(204);
+        }
+
+        [HttpPost("invitations", Name = "Invitations")]
+        public async Task<IActionResult> Invitations([FromBody] ApiFormat data)
+        {
+            if (data == null|| _context.Contacts == null)
+            {
+                return NotFound();
+            }
+            if (data == null) { return BadRequest(); }
+            var user = await _context.Users.FindAsync(data.to);
+            if (user == null) { return BadRequest(); }
+            var exist = await _context.Contacts.AnyAsync(c => c.Userid == data.to && c.Contactid == data.from);
+            if (exist) { return BadRequest(); }
+            var contact = new Contact();
+            contact.Userid = data.to;
+            contact.Contactid = data.from;
+            contact.Nickname = data.from;
+            contact.Server = data.server;
+            contact.LastContent = null;
+            contact.LastDate = DateTime.Now;
+            _context.Contacts.Add(contact);
+            await _context.SaveChangesAsync();
+            await hub.Clients.Group(data.to).SendAsync("ReceiveMessage");
+            return StatusCode(201);
+        }
+
+        [HttpPost("transfer", Name = "Transfer")]
+        public async Task<IActionResult> Transfer([FromBody] ApiFormat data)
+        {
+            if (data.content == null) { return BadRequest(); }
+            var user = await _context.Users.FindAsync(data.to);
+            if (user == null) { return BadRequest(); }
+            var contact = await _context.Contacts.Where(c => c.Userid == data.to).SingleAsync(c => c.Contactid == data.from);
+            if (contact == null) { return BadRequest(); }
+            Message message = new Message();
+            message.Userid = data.to;
+            message.Contactid = data.from;
+            message.Content = data.content;
+            message.Sent = false;
+            message.Time = DateTime.Now;
+            _context.Messages.Add(message);
+            await _context.SaveChangesAsync();
+            if (hub.Clients.User(data.to) != null)
+            {
+                await hub.Clients.Group(data.to).SendAsync("ReceiveMessage");
+            }
+            return StatusCode(201);
+        }
+
+        [HttpGet("contacts/{id}/messages", Name = "GetMessages")]
+        public async Task<IActionResult> GetMessages(string user, string id)
+        {
+            var _user = await _context.Users.FindAsync(user);
+            if (_user == null) { return NotFound(); }
+            var contact = await _context.Contacts.Where(c => c.Userid == user).SingleAsync(c => c.Contactid == id);
+            if (contact == null) { return NotFound(); }
+            var messages = await _context.Messages.Where(m => m.Userid == user && m.Contactid == id).ToListAsync();
+            List<JsonMessage> ret = new List<JsonMessage>();
+            foreach (Message message in messages)
+            {
+                ret.Add(JsonMessage.GetJsonMessage(message));
+            }
             return Ok(ret);
         }
 
         [HttpGet("contacts/{contact}/messages/{id}", Name = "GetMessage")]
-        public IActionResult GetMessage(string user, string contact, int id)
+        public async Task<IActionResult> GetMessage(string user, string contact, int id)
         {
-            Json_Message ret = service.ApiGetMessage(user, contact, id);
+            var message = await _context.Messages.Where(m => m.Userid == user && m.Contactid == contact).SingleAsync(c =>c.Id == id);
+            if (message == null) { return NotFound(); }
+            return Ok(JsonMessage.GetJsonMessage(message));
 
-            if (ret == null)
-            {
-                return NotFound();
-            }
-            // return the specific contact of the connected user in JSON
-            return Ok(ret);
         }
 
         [HttpDelete("contacts/{contact}/messages/{id}", Name = "DeleteMessage")]
-        public IActionResult DeleteMessage(string user, string contact, int id)
+        public async Task<IActionResult> DeleteMessage(string user, string contact, int id)
         {
-            bool s = service.ApiDeleteMessage(user, contact, id);
-            if (s) { return StatusCode(204); };
-            return NotFound();
+            var message = await _context.Messages.Where(m => m.Userid == user && m.Contactid == contact).SingleAsync(c =>c.Id == id);
+            if (message == null) { return NotFound(); }
+            _context.Messages.Remove(message);
+            
+            await _context.SaveChangesAsync();
+            return StatusCode(204);
         }
 
         [HttpPost("contacts/{id}/messages", Name = "PostMessage")]
-        public IActionResult PostMessage(string user, string id,
+        public async Task<IActionResult> PostMessage(string user, string id,
                   [FromBody] ApiFormat content)
         {
-            bool s = service.ApiAddMessage(user, id, content.content, true);
-            if (s) { return StatusCode(201); };
-            return BadRequest();
+            if (content.content == null) { return BadRequest(); }
+            var contact = await _context.Contacts.Where(c => c.Userid == user).SingleAsync(c => c.Contactid == id);
+            if (contact == null) { return BadRequest(); }
+
+            Message message = new Message();
+            message.Userid = user;
+            message.Contactid = id;
+            message.Content = content.content;
+            message.Sent = true;
+            message.Time = DateTime.Now;
+
+            _context.Messages.Add(message);
+
+            contact.LastContent = message.Content;
+            contact.LastDate = message.Time;
+            _context.Entry(contact).State = EntityState.Modified;
+
+            await _context.SaveChangesAsync();
+            return StatusCode(201);
+
         }
 
         [HttpPut("contacts/{contact}/messages/{id}", Name = "PutMessage")]
-        public IActionResult PostMessage(string user, string contact, int id,
+        public async Task<IActionResult> PostMessage(string user, string contact, int id,
                   [FromBody] ApiFormat content)
         {
-            bool s = service.ApiEditMessage(user, contact, content.content, id);
-            if (s) { return StatusCode(204); };
-            return BadRequest();
+            var message = await _context.Messages.Where(m => m.Userid == user && m.Contactid == contact).SingleAsync(c => c.Id == id);
+            if (message == null) { return NotFound(); }
+            message.Content = content.content;
+            _context.Entry(message).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return StatusCode(204);
         }
     }
 }
