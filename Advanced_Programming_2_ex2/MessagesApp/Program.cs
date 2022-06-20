@@ -1,7 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.DependencyInjection;
 using MessagesApp.Data;
 using MessagesApp.Hubs;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,15 +24,24 @@ builder.Services.AddDbContext<MessagesAppContext>(options =>
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
-// Add services to the container.
-
 builder.Services.AddControllers();
-
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<IDictionary<string, string>>(opts => new Dictionary<string, string>());
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 
-
+{
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidAudience = builder.Configuration["JWTParams:Audience"],
+        ValidIssuer = builder.Configuration["JWTParams:Issuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWTParams:SecretKey"]))
+    };
+});
 
 var app = builder.Build();
 
@@ -49,6 +61,7 @@ app.UseCors(MyAllowSpecificOrigins);
 app.UseRouting();
 
 app.UseAuthorization();
+//app.UseAuthentication();
 
 app.MapControllers();
 

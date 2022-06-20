@@ -10,6 +10,8 @@ namespace MessagesApp.Models
         [Required]
         public string Password { get; set; }
 
+        public string Token { get; set; }   
+
         public string Picture { get; set; }
 
     }

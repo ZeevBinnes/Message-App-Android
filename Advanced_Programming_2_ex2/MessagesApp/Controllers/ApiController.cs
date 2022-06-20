@@ -6,6 +6,7 @@ using MessagesApp.Hubs;
 using MessagesApp.Models;
 using Microsoft.EntityFrameworkCore;
 using MessagesApp.Data;
+using FirebaseAdmin.Messaging;
 
 namespace MessagesApp.Controllers
 {
@@ -29,6 +30,8 @@ namespace MessagesApp.Controllers
         {
             public string id { get; set; }
             public string pass { get; set; }
+
+            public string token { get; set; }
         }
         public class ApiFormat
         {
@@ -37,6 +40,8 @@ namespace MessagesApp.Controllers
             public string content { get; set; }
             public string server { get; set; }
         }
+
+       
 
 
 
@@ -56,6 +61,10 @@ namespace MessagesApp.Controllers
 
             if (user.Password == data.pass)
             {
+                user.Token = data.token;
+
+                await _context.SaveChangesAsync();
+                _context.Entry(user).State = EntityState.Modified;
                 return Ok();
             }
             return BadRequest();
@@ -77,6 +86,7 @@ namespace MessagesApp.Controllers
             user = new User();
             user.Userid = data.id;
             user.Password = data.pass;
+            user.Token = data.token;
             _context.Add(user);
             await _context.SaveChangesAsync();
             return StatusCode(200);
@@ -216,7 +226,7 @@ namespace MessagesApp.Controllers
             if (user == null) { return BadRequest(); }
             var contact = await _context.Contacts.Where(c => c.Userid == data.to).SingleAsync(c => c.Contactid == data.from);
             if (contact == null) { return BadRequest(); }
-            Message message = new Message();
+            Models.Message message = new Models.Message();
             message.Userid = data.to;
             message.Contactid = data.from;
             message.Content = data.content;
@@ -224,6 +234,20 @@ namespace MessagesApp.Controllers
             message.Time = DateTime.Now;
             _context.Messages.Add(message);
             await _context.SaveChangesAsync();
+            var fire = new FirebaseAdmin.Messaging.Message()
+            {
+                Data = new Dictionary<string, string>()
+                {
+                    { "score", "850" },
+                    { "time", "2:45" },
+                },
+                Token = user.Token,
+            };
+
+            // Send a message to the device corresponding to the provided
+            // registration token.
+            string response = await FirebaseMessaging.DefaultInstance.SendAsync(fire);
+
             if (hub.Clients.User(data.to) != null)
             {
                 await hub.Clients.Group(data.to).SendAsync("ReceiveMessage");
@@ -240,7 +264,7 @@ namespace MessagesApp.Controllers
             if (contact == null) { return NotFound(); }
             var messages = await _context.Messages.Where(m => m.Userid == user && m.Contactid == id).ToListAsync();
             List<JsonMessage> ret = new List<JsonMessage>();
-            foreach (Message message in messages)
+            foreach (Models.Message message in messages)
             {
                 ret.Add(JsonMessage.GetJsonMessage(message));
             }
@@ -275,7 +299,7 @@ namespace MessagesApp.Controllers
             var contact = await _context.Contacts.Where(c => c.Userid == user).SingleAsync(c => c.Contactid == id);
             if (contact == null) { return BadRequest(); }
 
-            Message message = new Message();
+            Models.Message message = new Models.Message();
             message.Userid = user;
             message.Contactid = id;
             message.Content = content.content;
