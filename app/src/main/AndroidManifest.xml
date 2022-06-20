@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="advancedprog2.messageappandroid">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,6 +15,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MessageAppAndroid"
         tools:targetApi="31">
+        <service
+            android:name=".services.FireService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".activities.RegisterActivity"
             android:exported="false" />
