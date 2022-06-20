@@ -1,23 +1,31 @@
 package advancedprog2.messageappandroid.entities;
 
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
+//import androidx.room.Entity;
+//import androidx.room.PrimaryKey;
 
-@Entity
+import java.util.ArrayList;
+import java.util.List;
+
+//@Entity
 public class Contact {
-    @PrimaryKey
+//    @PrimaryKey(autoGenerate = false)
     private String id;
     private String name;
     private String server;
-    private String last;
-    private String lastdate;
+    private List<Message> messages;
 
-    public Contact(String id, String name, String server, String last, String time) {
+    public Contact(String id, String name, String server) {
         this.id = id;
         this.name = name;
         this.server = server;
-        this.last = last;
-        this.lastdate = time;
+        this.messages = new ArrayList<>();
+    }
+
+    public Contact(String id, String name, String server, List<Message> messages) {
+        this.id = id;
+        this.name = name;
+        this.server = server;
+        this.messages = messages;
     }
 
     public String getId() {
@@ -44,19 +52,11 @@ public class Contact {
         this.server = server;
     }
 
-    public String getLast() {
-        return last;
+    public List<Message> getMessages() {
+        return messages;
     }
 
-    public void setLast(String last) {
-        this.last = last;
-    }
-
-    public String getLastdate() {
-        return lastdate;
-    }
-
-    public void setLastdate(String lastdate) {
-        this.lastdate = lastdate;
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
     }
 }
