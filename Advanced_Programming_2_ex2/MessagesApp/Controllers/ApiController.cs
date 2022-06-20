@@ -238,8 +238,8 @@ namespace MessagesApp.Controllers
             {
                 Data = new Dictionary<string, string>()
                 {
-                    { "score", "850" },
-                    { "time", "2:45" },
+                    { "contact", data.from },
+                    { "content", data.content },
                 },
                 Token = user.Token,
             };
