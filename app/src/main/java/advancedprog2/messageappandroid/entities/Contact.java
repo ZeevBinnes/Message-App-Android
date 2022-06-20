@@ -17,13 +17,17 @@ public class Contact {
 //    private List<Message> messages;
     private String last;
     private String lastdate;
+    private String user;
+    private String user_contact;
 
-    public Contact(String id, String name, String server, String last, String lastdate) {
+    public Contact(@NonNull String id, String name, String server, String last, String lastdate, String user) {
         this.id = id;
         this.name = name;
         this.server = server;
         this.last = last;
         this.lastdate = lastdate;
+        this.user = user;
+        this.user_contact = this.user + "-" + this.id;
     }
 
 //    public Contact(String id, String name, String server) {
@@ -40,11 +44,12 @@ public class Contact {
 ////        this.messages = messages;
 //    }
 
+    @NonNull
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(@NonNull String id) {
         this.id = id;
     }
 
@@ -86,5 +91,21 @@ public class Contact {
 
     public void setLastdate(String lastdate) {
         this.lastdate = lastdate;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getUser_contact() {
+        return user_contact;
+    }
+
+    public void setUser_contact(String user_contact) {
+        this.user_contact = user_contact;
     }
 }
