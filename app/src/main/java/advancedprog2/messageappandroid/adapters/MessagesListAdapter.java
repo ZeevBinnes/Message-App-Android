@@ -55,13 +55,13 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
             if (current.isSent()) {
                 holder.lMsgSent.setVisibility(View.VISIBLE);
                 holder.tvSentContent.setText(current.getContent());
-                holder.tvSentDate.setText(current.getDateFormat());
+                holder.tvSentDate.setText(current.getCreated());
                 holder.lMsgRecv.setVisibility(View.INVISIBLE);
             } else {
                 holder.lMsgSent.setVisibility(View.INVISIBLE);
                 holder.lMsgRecv.setVisibility(View.VISIBLE);
                 holder.tvRecvContent.setText(current.getContent());
-                holder.tvRecvDate.setText(current.getDateFormat());
+                holder.tvRecvDate.setText(current.getCreated());
             }
         }
     }
