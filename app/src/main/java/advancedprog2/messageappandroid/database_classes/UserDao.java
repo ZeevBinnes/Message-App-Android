@@ -8,6 +8,7 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import java.util.List;
+import java.util.concurrent.Future;
 
 import advancedprog2.messageappandroid.entities.User;
 
@@ -24,7 +25,7 @@ public interface UserDao {
     void delete(User user);
 
     @Query("SELECT * FROM User WHERE username = :id")
-    LiveData<User> getUserById(String id);
+    User getUserById(String id);
 
     @Query("SELECT * FROM User")
     LiveData<List<User>> getAllUsers();

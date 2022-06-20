@@ -37,12 +37,14 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
     }
 
     private final LayoutInflater mInflater;
-    public List<ContactToShow> contacts;
+    public List<Contact> contacts;
     private Context context;
+    private String username;
 
-    public ContactsListAdapter(Context context) {
+    public ContactsListAdapter(Context context, String username) {
         mInflater = LayoutInflater.from(context);
         this.context = context;
+        this.username = username;
     }
 
     @Override
@@ -55,7 +57,7 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
     @Override
     public void onBindViewHolder(@NonNull ContactViewHolder holder, int position) {
         if (contacts != null) {
-            final ContactToShow current = contacts.get(position);
+            final Contact current = contacts.get(position);
             holder.tvName.setText(current.getName());
             holder.tvContent.setText(current.getLast());
             holder.tvTime.setText(current.getLastdate());
@@ -65,12 +67,13 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
                 Intent intent = new Intent(context, ChatActivity.class);
                 intent.putExtra("contactName", current.getName());
                 intent.putExtra("contactId", current.getId());
+                intent.putExtra("username", username);
                 context.startActivity(intent);
             });
         }
     }
 
-    public void setContacts(List<ContactToShow> contactsList) {
+    public void setContacts(List<Contact> contactsList) {
         contacts = contactsList;
         notifyDataSetChanged();
     }

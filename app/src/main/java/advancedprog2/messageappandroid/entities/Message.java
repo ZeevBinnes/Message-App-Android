@@ -1,22 +1,30 @@
 package advancedprog2.messageappandroid.entities;
 
-//import androidx.room.Entity;
-//import androidx.room.PrimaryKey;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-//@Entity
+@Entity
 public class Message {
 
-//    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey(autoGenerate = true)
     private int id;
     private String content;
-    private Date created;
+    private String created;
     private boolean sent;
     private String type = "text";
 
+    @Ignore
     public Message(String content, Date created, boolean sent) {
+        this.content = content;
+        this.created = getDateFormat(created);
+        this.sent = sent;
+    }
+
+    public Message(String content, String created, boolean sent) {
         this.content = content;
         this.created = created;
         this.sent = sent;
@@ -38,13 +46,15 @@ public class Message {
         this.content = content;
     }
 
-    public Date getCreated() {
+    public String getCreated() {
         return created;
     }
 
     public void setCreated(Date created) {
-        this.created = created;
+        this.created = getDateFormat(created);
     }
+
+    public void setCreated(String created) {this.created = created;}
 
     public boolean isSent() {
         return sent;
@@ -54,9 +64,17 @@ public class Message {
         this.sent = sent;
     }
 
-    public String getDateFormat() {
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public static String getDateFormat(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm dd/MM/yy");
-        return sdf.format(created);
+        return sdf.format(date);
     }
 
 //    public String getDateFormat() {
