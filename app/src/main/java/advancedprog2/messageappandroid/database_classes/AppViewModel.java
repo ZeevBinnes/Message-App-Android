@@ -36,6 +36,13 @@ public class AppViewModel extends AndroidViewModel {
     }
     public LiveData<List<User>> getAllUsers() {return users;}
 
+    public LiveData<UserWithContacts> getContacts(String username) {
+        return repository.getUserWithContacts(username);
+    }
+    public LiveData<ContactWithMessages> getMessages(String user_contact) {
+        return repository.getContactWithMessages(user_contact);
+    }
+
     public void insert(User user) {
         repository.insert(user);
     }

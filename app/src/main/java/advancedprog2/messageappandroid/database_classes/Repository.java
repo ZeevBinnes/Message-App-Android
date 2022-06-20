@@ -28,6 +28,8 @@ public class Repository {
     private LiveData<List<User>> allUsers;
     private LiveData<List<Contact>> allContacts;
     private LiveData<List<Message>> allMessages;
+    private LiveData<UserWithContacts> userWithContacts;
+    private LiveData<ContactWithMessages> contactWithMessages;
 
     public Repository(Application application) {
         localDb = AppLocalDatabase.getInstance(application.getApplicationContext());
@@ -48,6 +50,14 @@ public class Repository {
     }
     public LiveData<List<Message>> getAllMessages() {
         return allMessages;
+    }
+    public LiveData<UserWithContacts> getUserWithContacts(String username) {
+        userWithContacts = userDao.getContactsOfUser(username);
+        return userWithContacts;
+    }
+    public LiveData<ContactWithMessages> getContactWithMessages(String user_contact) {
+        contactWithMessages = contactDao.getMessagesWithContact(user_contact);
+        return contactWithMessages;
     }
 
 //    public void insert(User user) {
@@ -153,8 +163,7 @@ public class Repository {
 
         @Override
         protected User doInBackground(String... id) {
-            User user = userDao.getUserById(id[0]);
-            return user;
+            return userDao.getUserById(id[0]);
         }
     }
 }

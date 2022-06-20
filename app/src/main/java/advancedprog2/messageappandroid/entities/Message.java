@@ -16,18 +16,21 @@ public class Message {
     private String created;
     private boolean sent;
     private String type = "text";
+    private String user_contact;
 
     @Ignore
-    public Message(String content, Date created, boolean sent) {
+    public Message(String content, Date created, boolean sent, String user_contact) {
         this.content = content;
         this.created = getDateFormat(created);
         this.sent = sent;
+        this.user_contact = user_contact;
     }
 
-    public Message(String content, String created, boolean sent) {
+    public Message(String content, String created, boolean sent, String user_contact) {
         this.content = content;
         this.created = created;
         this.sent = sent;
+        this.user_contact = user_contact;
     }
 
     public int getId() {
@@ -77,7 +80,15 @@ public class Message {
         return sdf.format(date);
     }
 
-//    public String getDateFormat() {
+    public String getUser_contact() {
+        return user_contact;
+    }
+
+    public void setUser_contact(String user_contact) {
+        this.user_contact = user_contact;
+    }
+
+    //    public String getDateFormat() {
 //        int hour = created.getHours();
 //        int minute = created.getMinutes();
 //        int day = created.getDate();

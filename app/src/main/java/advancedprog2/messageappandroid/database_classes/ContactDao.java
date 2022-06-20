@@ -5,6 +5,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Transaction;
 import androidx.room.Update;
 
 import java.util.List;
@@ -25,4 +26,8 @@ public interface ContactDao {
 
     @Query("SELECT * FROM Contact")
     LiveData<List<Contact>> getContacts();
+
+    @Transaction
+    @Query("SELECT * FROM Contact WHERE user_contact = :user_contact")
+    LiveData<ContactWithMessages> getMessagesWithContact(String user_contact);
 }
