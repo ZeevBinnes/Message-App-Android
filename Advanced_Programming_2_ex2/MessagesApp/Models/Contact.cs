@@ -1,23 +1,21 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MessagesApp.Models
 {
     public class Contact
     {
-        [Key]
-        public string User { get; set; }
+        public string Userid { get; set; }
 
+        public string Contactid { get; set; }
+        
         public string Nickname { get; set; }
 
-        public List<Message> Messages { get; set; }
+        public string LastContent { get; set; }
+        public DateTime LastDate { get; set; }
 
         [Required]
         public string Server { get; set; }
-
-        public Contact()
-        {
-            Messages = new List<Message>();
-        }
 
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MessagesApp.Models
 {
@@ -6,25 +7,17 @@ namespace MessagesApp.Models
     {
         public int Id { get; set; }
 
-        //[Required]
-        //public User From { get; set; }
+        
+        public string Userid { get; set; }
 
-        //[Required]
-        //public User To { get; set; }
+        public string Contactid { get; set; }
 
-        [Required]
         public bool Sent { get; set; }
 
-        [Required]
         public DateTime Time { get; set; }
 
 
-        [Required]
         public string Content { get; set; }
 
-
-        [Required]
-        public string Type { get; set; }
-
-    }
+       }
 }

@@ -27,7 +27,7 @@ namespace WebApplication1.Controllers
         }
 
         // GET: Rates/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
             if (id == null)
             {
@@ -61,7 +61,7 @@ namespace WebApplication1.Controllers
         }
 
         // GET: Rates/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
             if (id == null)
             {
@@ -97,7 +97,7 @@ namespace WebApplication1.Controllers
         }
 
         // GET: Rates/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
             if (id == null)
             {

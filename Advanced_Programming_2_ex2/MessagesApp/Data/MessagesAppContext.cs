@@ -14,12 +14,11 @@ namespace MessagesApp.Data
         {
         }
 
-        public DbSet<MessagesApp.Models.Rate>? Rate { get; set; }
+        public DbSet<MessagesApp.Models.User> Users { get; set; }
 
-        public DbSet<MessagesApp.Models.User>? User { get; set; }
+        public DbSet<MessagesApp.Models.Message> Messages { get; set; }
 
-        public DbSet<MessagesApp.Models.Message>? Message { get; set; }
+        public DbSet<MessagesApp.Models.Contact> Contacts { get; set; }
 
-        public DbSet<MessagesApp.Models.Contact>? Chat { get; set; }
     }
 }
