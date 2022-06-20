@@ -15,6 +15,7 @@ import java.util.List;
 import advancedprog2.messageappandroid.R;
 import advancedprog2.messageappandroid.adapters.ContactsListAdapter;
 import advancedprog2.messageappandroid.database_classes.AppViewModel;
+import advancedprog2.messageappandroid.database_classes.UserWithContacts;
 import advancedprog2.messageappandroid.entities.Contact;
 import advancedprog2.messageappandroid.toShowClasses.ContactToShow;
 
@@ -59,12 +60,19 @@ public class ContactsActivity extends AppCompatActivity {
         contactsListLayout.setAdapter(adapter);
         contactsListLayout.setLayoutManager(new LinearLayoutManager(this));
 
-        appViewModel.getContacts().observe(this, new Observer<List<Contact>>() {
+        appViewModel.getContacts(username).observe(this, new Observer<UserWithContacts>() {
             @Override
-            public void onChanged(List<Contact> contacts) {
-                adapter.setContacts(contacts);
+            public void onChanged(UserWithContacts userWithContacts) {
+                adapter.setContacts(userWithContacts.contacts);
             }
         });
+
+//        appViewModel.getContacts().observe(this, new Observer<List<Contact>>() {
+//            @Override
+//            public void onChanged(List<Contact> contacts) {
+//                adapter.setContacts(contacts);
+//            }
+//        });
 
 
 

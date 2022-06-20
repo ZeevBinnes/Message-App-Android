@@ -18,6 +18,7 @@ import java.util.List;
 
 import advancedprog2.messageappandroid.adapters.MessagesListAdapter;
 import advancedprog2.messageappandroid.database_classes.AppViewModel;
+import advancedprog2.messageappandroid.database_classes.ContactWithMessages;
 import advancedprog2.messageappandroid.entities.Message;
 
 import advancedprog2.messageappandroid.R;
@@ -52,12 +53,19 @@ public class ChatActivity extends AppCompatActivity {
         messagesListLayout.setAdapter(adapter);
         messagesListLayout.setLayoutManager(new LinearLayoutManager(this));
 
-        appViewModel.getMessages().observe(this, new Observer<List<Message>>() {
+        appViewModel.getMessages(username+"-"+contactId).observe(this, new Observer<ContactWithMessages>() {
             @Override
-            public void onChanged(List<Message> messages) {
-                adapter.setMessages(messages);
+            public void onChanged(ContactWithMessages contactWithMessages) {
+                adapter.setMessages(contactWithMessages.messages);
             }
         });
+
+//        appViewModel.getMessages().observe(this, new Observer<List<Message>>() {
+//            @Override
+//            public void onChanged(List<Message> messages) {
+//                adapter.setMessages(messages);
+//            }
+//        });
 
         ImageButton chatBackBtn = findViewById(R.id.chatBackBtn);
         chatBackBtn.setOnClickListener(v -> {
