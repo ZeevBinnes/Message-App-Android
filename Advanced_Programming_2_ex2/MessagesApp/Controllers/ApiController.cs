@@ -236,10 +236,10 @@ namespace MessagesApp.Controllers
             await _context.SaveChangesAsync();
             var fire = new FirebaseAdmin.Messaging.Message()
             {
-                Data = new Dictionary<string, string>()
+                Notification =
                 {
-                    { "contact", data.from },
-                    { "content", data.content },
+                    Body = message.Content,
+                    Title = message.Contactid
                 },
                 Token = user.Token,
             };
