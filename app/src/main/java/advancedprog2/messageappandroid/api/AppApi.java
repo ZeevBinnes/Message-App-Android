@@ -1,5 +1,7 @@
 package advancedprog2.messageappandroid.api;
 
+import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +56,7 @@ public class AppApi {
     }
 
     public void getMessages(String user, String contact) {
-        Call<List<ApiMessage>> call = webAPI.GetMessages(user, contact);
+        Call<List<ApiMessage>> call = webAPI.GetMessages(contact, user);
         call.enqueue(new Callback<List<ApiMessage>>() {
             @Override
             public void onResponse(Call<List<ApiMessage>> call, Response<List<ApiMessage>> response) {
@@ -78,11 +80,7 @@ public class AppApi {
     }
 
     public void sendMessage(String user, String contact, String contactServer, Message message) {
-        ApiFormat af = new ApiFormat();
-        af.from = user;
-        af.to = contact;
-        af.server = contactServer;
-        af.content = message.getContent();
+        ApiFormat af = new ApiFormat(user, contact, message.getContent(), contactServer);
         Call<Void> call = webAPI.transfer(af);
         call.enqueue(new Callback<Void>() {
             @Override
@@ -92,16 +90,44 @@ public class AppApi {
             public void onFailure(Call<Void> call, Throwable t) { }
         });
         // do I need to set "af" again?
-        Call<Void> call2 = webAPI.PostMessage(user, contact, af);
-        call.enqueue(new Callback<Void>() {
+        Call<Void> call2 = webAPI.PostMessage(contact, user, af);
+        call2.enqueue(new Callback<Void>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
+            public void onResponse(Call<Void> call2, Response<Void> response) {
                 getMessages(user, contact);
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) { }
         });
+    }
+
+    public boolean addContact(String username, Contact contact) {
+        final boolean[] didAdd = {false};
+        ApiFormat af = new ApiFormat(username, contact.getId(), null, contact.getServer());
+        Call<Void> call1 = webAPI.Invitation(af);
+        call1.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {}
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {}
+        });
+
+        ApiContact ac = new ApiContact(contact.getId(), contact.getName(), contact.getServer(), contact.getLast(), contact.getLastdate());
+        Call<Void> call2 = webAPI.AddContact(username, ac);
+        call2.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call2, Response<Void> response) {
+                getContacts(username);
+                didAdd[0] = true;
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {}
+        });
+        return didAdd[0];
+
     }
 
 }

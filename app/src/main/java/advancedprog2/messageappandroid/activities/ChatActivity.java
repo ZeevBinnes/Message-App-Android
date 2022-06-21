@@ -67,6 +67,7 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onChanged(ContactWithMessages contactWithMessages) {
                 adapter.setMessages(contactWithMessages.messages);
+                messagesListLayout.smoothScrollToPosition(adapter.getItemCount());
             }
         });
 

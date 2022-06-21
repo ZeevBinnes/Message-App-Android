@@ -45,7 +45,7 @@ public class Repository {
     public LiveData<ContactWithMessages> getContactWithMessages(String user, String contact) {
         String user_contact = user+"-"+contact;
         contactWithMessages = contactDao.getMessagesWithContact(user_contact);
-        if(appApi != null) appApi.getMessages(user, contact);
+        if(appApi != null) appApi.getMessages(contact, user);
         return contactWithMessages;
     }
 
@@ -76,15 +76,11 @@ public class Repository {
     }
 
     public boolean addContact(String username, String contactId, String contactName, String contactServer) {
-        // I have to check if the contactId exists in server!!!!!
-        // for now the check is only local.
-        if (this.findContact(username, contactId) != null) {
-            return false;
-        }
-        if (this.getUserById(contactId) == null) return false;
+        if (username.equals(contactId)) return false;
+        if (this.findContact(username, contactId) != null) return false;
         Contact contact = new Contact(contactId, contactName, contactServer, null, null, username);
-        new InsertContactAsyncTask(userDao).execute(contact);
-        return true;
+//        new InsertContactAsyncTask(userDao).execute(contact); // maybe not needed
+        return appApi.addContact(username, contact);
     }
 
     public void addMessage(String username, String contactId, String type, String content, boolean sent, Date time, String contactServer) {
@@ -92,7 +88,7 @@ public class Repository {
         Message message = new Message(content, time, sent, user_contact);
         new InsertMessageAsyncTask(messageDao).execute(message);
         new UpdateContactWithLast(contactDao).execute(username, contactId, content, message.getCreated());
-        if(appApi != null) appApi.sendMessage(username, contactId, contactServer, message);
+        if(appApi != null) appApi.sendMessage(contactId, username, contactServer, message);
         return;
     }
 

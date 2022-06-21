@@ -22,7 +22,7 @@ public interface WebAPI {
     Call<List<ApiContact>> GetContacts(@Query("user") String user);
 
     @GET("contacts/{id}")
-    Call<ApiContact> GetContact(@Query("user") String userid, @Path("id") String contactid);
+    Call<ApiContact> GetContact(@Path("id") String contactid, @Query("user") String userid);
 
     @POST("contacts")
     Call<Void> AddContact(@Query("user") String userid,@Body ApiContact contact);
@@ -34,10 +34,10 @@ public interface WebAPI {
     Call<Void> transfer(@Body ApiFormat message);
 
     @GET("contacts/{id}/messages")
-    Call<List<ApiMessage>> GetMessages(@Query("user") String userid, @Path("id") String contactid);
+    Call<List<ApiMessage>> GetMessages(@Path("id") String contactid, @Query("user") String userid);
 
     @POST("contacts/{id}/messages")
-    Call<Void> PostMessage(@Query("user") String userid, @Path("id") String contactid, @Body ApiFormat content);
+    Call<Void> PostMessage(@Path("id") String contactid, @Query("user") String userid, @Body ApiFormat content);
 
     @DELETE("posts/{id}")
     Call<Void> deletePost(@Path("id") int id);
