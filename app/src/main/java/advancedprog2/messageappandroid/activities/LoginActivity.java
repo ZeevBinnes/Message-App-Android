@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ import advancedprog2.messageappandroid.entities.User;
 public class LoginActivity extends AppCompatActivity {
 
     private AppViewModel appViewModel;
-    private List<User> allUsers;
+//    private List<User> allUsers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,22 +30,22 @@ public class LoginActivity extends AppCompatActivity {
 
         appViewModel = new ViewModelProvider(this).get(AppViewModel.class);
 
-        appViewModel.getAllUsers().observe(this, new Observer<List<User>>() {
-            @Override
-            public void onChanged(List<User> users) {
-                allUsers = users;
-            }
-        });
+//        appViewModel.getAllUsers().observe(this, new Observer<List<User>>() {
+//            @Override
+//            public void onChanged(List<User> users) {
+//                allUsers = users;
+//            }
+//        });
 
         EditText edUserId = findViewById(R.id.loginUsername);
         EditText edPassword = findViewById(R.id.loginPassword);
         Button loginBtn = findViewById(R.id.loginSubmit);
+        TextView errMsg = findViewById(R.id.loginErrMsg);
 
         loginBtn.setOnClickListener(v -> {
-            User u = getUserById(edUserId.getText().toString());
+            User u = appViewModel.getUserById(edUserId.getText().toString());
             if (u == null || !(u.getPassword().equals(edPassword.getText().toString()))) {
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
+                errMsg.setText("wrong username or password");
             } else {
                 Intent intent = new Intent(this, ContactsActivity.class);
                 intent.putExtra("username", edUserId.getText().toString());
@@ -53,12 +54,12 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private User getUserById(String username) {
-        for (User u : allUsers) {
-            if (u.getUsername().equals(username)){
-                return u;
-            }
-        }
-        return null;
-    }
+//    private User getUserById(String username) {
+//        for (User u : allUsers) {
+//            if (u.getUsername().equals(username)){
+//                return u;
+//            }
+//        }
+//        return null;
+//    }
 }

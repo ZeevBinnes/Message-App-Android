@@ -10,6 +10,7 @@ import androidx.room.Update;
 
 import java.util.List;
 
+import advancedprog2.messageappandroid.activities.LoginActivity;
 import advancedprog2.messageappandroid.entities.Contact;
 
 @Dao
@@ -30,4 +31,16 @@ public interface ContactDao {
     @Transaction
     @Query("SELECT * FROM Contact WHERE user_contact = :user_contact")
     LiveData<ContactWithMessages> getMessagesWithContact(String user_contact);
+
+    @Query("SELECT * FROM Contact WHERE user = :username AND id = :contactId")
+    Contact findContact(String username, String contactId);
+
+    @Query("UPDATE Contact SET last=:last, lastdate=:lastdate WHERE user=:user AND id=:contactId")
+    void updateLastMessage(String user, String contactId, String last, String lastdate);
+
+    @Query("DELETE FROM Contact WHERE user = :user")
+    void clearContactsOfUser(String user);
+
+    @Insert
+    void insertList(List<Contact> contacts);
 }
