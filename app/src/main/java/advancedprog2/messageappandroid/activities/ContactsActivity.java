@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -37,23 +39,13 @@ public class ContactsActivity extends AppCompatActivity {
             userNameChatBar.setText(username);
         }
 
-//        List<ContactToShow> contactsList = new ArrayList<>();
-//        contactsList.add(new ContactToShow("a", "aa", "s", "hello", "12:34 5.6.22"));
-//        contactsList.add(new ContactToShow("b", "bb", "s", "hello", "12:34 5.6.22"));
-//        contactsList.add(new ContactToShow("c", "cc", "s", "hello", "12:34 5.6.22"));
-//        contactsList.add(new ContactToShow("d", "dd", "s", "hello", "12:34 5.6.22"));
-//        contactsList.add(new ContactToShow("e", "ee", "s", "hello", "12:34 5.6.22"));
-//        contactsList.add(new ContactToShow("f", "ff", "s", "hello", "12:34 5.6.22"));
-//        contactsList.add(new ContactToShow("g", "gg", "s", "hello", "12:34 5.6.22"));
-//        contactsList.add(new ContactToShow("h", "hh", "s", "hello", "12:34 5.6.22"));
-//        contactsList.add(new ContactToShow("i", "ii", "s", "hello", "12:34 5.6.22"));
-//        contactsList.add(new ContactToShow("j", "jj", "s", "hello", "12:34 5.6.22"));
-//        contactsList.add(new ContactToShow("k", "kk", "s", "hello", "12:34 5.6.22"));
-//        contactsList.add(new ContactToShow("l", "ll", "s", "hello", "12:34 5.6.22"));
-//        contactsList.add(new ContactToShow("m", "mm", "s", "hello", "12:34 5.6.22"));
-//        contactsList.add(new ContactToShow("n", "nn", "s", "hello", "12:34 5.6.22"));
-//        contactsList.add(new ContactToShow("o", "oo", "s", "hello", "12:34 5.6.22"));
-//        contactsList.add(new ContactToShow("p", "pp", "s", "hello", "12:34 5.6.22"));
+        ImageButton addContactBtn = findViewById(R.id.btnAddContact);
+        addContactBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AddContactActivity.class);
+            intent.putExtra("username", username);
+            startActivity(intent);
+        });
+
 
         RecyclerView contactsListLayout = findViewById(R.id.contactsList);
         final ContactsListAdapter adapter = new ContactsListAdapter(this, username);
@@ -78,3 +70,20 @@ public class ContactsActivity extends AppCompatActivity {
 
     }
 }
+//        List<ContactToShow> contactsList = new ArrayList<>();
+//        contactsList.add(new ContactToShow("a", "aa", "s", "hello", "12:34 5.6.22"));
+//        contactsList.add(new ContactToShow("b", "bb", "s", "hello", "12:34 5.6.22"));
+//        contactsList.add(new ContactToShow("c", "cc", "s", "hello", "12:34 5.6.22"));
+//        contactsList.add(new ContactToShow("d", "dd", "s", "hello", "12:34 5.6.22"));
+//        contactsList.add(new ContactToShow("e", "ee", "s", "hello", "12:34 5.6.22"));
+//        contactsList.add(new ContactToShow("f", "ff", "s", "hello", "12:34 5.6.22"));
+//        contactsList.add(new ContactToShow("g", "gg", "s", "hello", "12:34 5.6.22"));
+//        contactsList.add(new ContactToShow("h", "hh", "s", "hello", "12:34 5.6.22"));
+//        contactsList.add(new ContactToShow("i", "ii", "s", "hello", "12:34 5.6.22"));
+//        contactsList.add(new ContactToShow("j", "jj", "s", "hello", "12:34 5.6.22"));
+//        contactsList.add(new ContactToShow("k", "kk", "s", "hello", "12:34 5.6.22"));
+//        contactsList.add(new ContactToShow("l", "ll", "s", "hello", "12:34 5.6.22"));
+//        contactsList.add(new ContactToShow("m", "mm", "s", "hello", "12:34 5.6.22"));
+//        contactsList.add(new ContactToShow("n", "nn", "s", "hello", "12:34 5.6.22"));
+//        contactsList.add(new ContactToShow("o", "oo", "s", "hello", "12:34 5.6.22"));
+//        contactsList.add(new ContactToShow("p", "pp", "s", "hello", "12:34 5.6.22"));

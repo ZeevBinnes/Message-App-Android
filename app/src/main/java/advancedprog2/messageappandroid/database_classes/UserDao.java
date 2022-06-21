@@ -22,7 +22,7 @@ public interface UserDao {
 
     @Transaction
     @Insert
-    void addContacts(List<Contact> contacts);
+    void addContact(Contact contact);
 
     @Update
     void update(User user);

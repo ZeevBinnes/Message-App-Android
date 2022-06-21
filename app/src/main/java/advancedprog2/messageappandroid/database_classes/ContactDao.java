@@ -30,4 +30,10 @@ public interface ContactDao {
     @Transaction
     @Query("SELECT * FROM Contact WHERE user_contact = :user_contact")
     LiveData<ContactWithMessages> getMessagesWithContact(String user_contact);
+
+    @Query("SELECT * FROM Contact WHERE user = :username AND id = :contactId")
+    Contact findContact(String username, String contactId);
+
+    @Query("UPDATE Contact SET last=:last, lastdate=:lastdate WHERE user=:user AND id=:contactId")
+    void updateLastMessage(String user, String contactId, String last, String lastdate);
 }

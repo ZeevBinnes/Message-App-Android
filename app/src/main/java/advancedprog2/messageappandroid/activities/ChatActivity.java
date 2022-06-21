@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -36,6 +37,11 @@ public class ChatActivity extends AppCompatActivity {
 
         appViewModel = new ViewModelProvider(this).get(AppViewModel.class);
 
+        TextView contactNameChatBar = findViewById(R.id.contactNameChatBar);
+        ImageButton chatBackBtn = findViewById(R.id.chatBackBtn);
+        EditText edMessage = findViewById(R.id.inputMessage);
+        ImageButton sendMessageBtn = findViewById(R.id.sendMessage);
+
         if (getIntent().hasExtra("username")) {
             username = getIntent().getStringExtra("username");
         }
@@ -44,7 +50,6 @@ public class ChatActivity extends AppCompatActivity {
         }
         if (getIntent().hasExtra("contactName")) {
             String contactName = getIntent().getStringExtra("contactName");
-            TextView contactNameChatBar = findViewById(R.id.contactNameChatBar);
             contactNameChatBar.setText(contactName);
         }
 
@@ -67,11 +72,14 @@ public class ChatActivity extends AppCompatActivity {
 //            }
 //        });
 
-        ImageButton chatBackBtn = findViewById(R.id.chatBackBtn);
         chatBackBtn.setOnClickListener(v -> {
             Intent intent = new Intent(this, ContactsActivity.class);
             intent.putExtra("username", username);
             startActivity(intent);
+        });
+
+        sendMessageBtn.setOnClickListener(v -> {
+            appViewModel.sendMessage(username, contactId, "text", edMessage.getText().toString());
         });
 
 //        List<Message> messageList = new ArrayList<>();
