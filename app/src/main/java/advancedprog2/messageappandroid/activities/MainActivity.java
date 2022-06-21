@@ -1,10 +1,14 @@
 package advancedprog2.messageappandroid.activities;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 //import android.arch.lifecycle.ViewModelProviders;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     private AppViewModel appViewModel;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,10 +57,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, RegisterActivity.class);
             startActivity(intent);
         });
-
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(MainActivity.this,
-                instanceIdResult ->
-                        Session.Token = instanceIdResult.getToken());
 
     }
 }

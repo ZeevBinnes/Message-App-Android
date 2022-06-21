@@ -11,11 +11,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import java.util.List;
 
 import advancedprog2.messageappandroid.R;
 import advancedprog2.messageappandroid.database_classes.AppViewModel;
 import advancedprog2.messageappandroid.entities.Contact;
+import advancedprog2.messageappandroid.entities.Session;
 import advancedprog2.messageappandroid.entities.User;
 
 public class LoginActivity extends AppCompatActivity {
@@ -29,6 +32,10 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         appViewModel = new ViewModelProvider(this).get(AppViewModel.class);
+
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(LoginActivity.this,
+                instanceIdResult ->
+                        Session.Token = instanceIdResult.getToken());
 
 //        appViewModel.getAllUsers().observe(this, new Observer<List<User>>() {
 //            @Override
