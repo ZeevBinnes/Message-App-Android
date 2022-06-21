@@ -20,6 +20,7 @@ import java.util.List;
 import advancedprog2.messageappandroid.adapters.MessagesListAdapter;
 import advancedprog2.messageappandroid.database_classes.AppViewModel;
 import advancedprog2.messageappandroid.database_classes.ContactWithMessages;
+import advancedprog2.messageappandroid.entities.Contact;
 import advancedprog2.messageappandroid.entities.Message;
 
 import advancedprog2.messageappandroid.R;
@@ -29,6 +30,7 @@ public class ChatActivity extends AppCompatActivity {
     private AppViewModel appViewModel;
     private String username;
     private String contactId;
+    private String contactServer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,13 +54,16 @@ public class ChatActivity extends AppCompatActivity {
             String contactName = getIntent().getStringExtra("contactName");
             contactNameChatBar.setText(contactName);
         }
+        if (getIntent().hasExtra("contactServer")) {
+            contactServer = getIntent().getStringExtra("contactServer");
+        }
 
         RecyclerView messagesListLayout = findViewById(R.id.messagesList);
         final MessagesListAdapter adapter = new MessagesListAdapter(this);
         messagesListLayout.setAdapter(adapter);
         messagesListLayout.setLayoutManager(new LinearLayoutManager(this));
 
-        appViewModel.getMessages(username+"-"+contactId).observe(this, new Observer<ContactWithMessages>() {
+        appViewModel.getMessages(username, contactId).observe(this, new Observer<ContactWithMessages>() {
             @Override
             public void onChanged(ContactWithMessages contactWithMessages) {
                 adapter.setMessages(contactWithMessages.messages);
@@ -79,7 +84,8 @@ public class ChatActivity extends AppCompatActivity {
         });
 
         sendMessageBtn.setOnClickListener(v -> {
-            appViewModel.sendMessage(username, contactId, "text", edMessage.getText().toString());
+            appViewModel.sendMessage(username, contactId, "text", edMessage.getText().toString(), contactServer);
+            edMessage.setText("");
         });
 
 //        List<Message> messageList = new ArrayList<>();

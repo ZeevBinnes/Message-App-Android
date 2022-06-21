@@ -25,4 +25,10 @@ public interface MessageDao {
 
     @Query("SELECT * FROM Message")
     LiveData<List<Message>> getAllMessages();
+
+    @Query("DELETE FROM Message WHERE user_contact = :user_contact")
+    void clearMessagesOfContact(String user_contact);
+
+    @Insert
+    void insertList(List<Message> messages);
 }

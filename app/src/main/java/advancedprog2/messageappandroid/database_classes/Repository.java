@@ -14,6 +14,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import advancedprog2.messageappandroid.api.AppApi;
 import advancedprog2.messageappandroid.entities.Contact;
 import advancedprog2.messageappandroid.entities.Message;
 import advancedprog2.messageappandroid.entities.User;
@@ -26,20 +27,26 @@ public class Repository {
     private MessageDao messageDao;
     private LiveData<UserWithContacts> userWithContacts;
     private LiveData<ContactWithMessages> contactWithMessages;
+    private AppApi appApi;
 
     public Repository(Application application) {
         localDb = AppLocalDatabase.getInstance(application.getApplicationContext());
         userDao = localDb.userDao();
         contactDao = localDb.contactDao();
         messageDao = localDb.messageDao();
+//        appApi = new AppApi(localDb);
+        appApi = null;
     }
 
     public LiveData<UserWithContacts> getUserWithContacts(String username) {
         userWithContacts = userDao.getContactsOfUser(username);
+        if (appApi != null) appApi.getContacts(username);
         return userWithContacts;
     }
-    public LiveData<ContactWithMessages> getContactWithMessages(String user_contact) {
+    public LiveData<ContactWithMessages> getContactWithMessages(String user, String contact) {
+        String user_contact = user+"-"+contact;
         contactWithMessages = contactDao.getMessagesWithContact(user_contact);
+        if(appApi != null) appApi.getMessages(user, contact);
         return contactWithMessages;
     }
 
@@ -68,7 +75,6 @@ public class Repository {
         }
         return null;
     }
-    // not complete yet!
 
     public boolean addContact(String username, String contactId, String contactName, String contactServer) {
         // I have to check if the contactId exists in server!!!!!
@@ -82,11 +88,12 @@ public class Repository {
         return true;
     }
 
-    public void addMessage(String username, String contactId, String type, String content, boolean sent, Date time) {
+    public void addMessage(String username, String contactId, String type, String content, boolean sent, Date time, String contactServer) {
         String user_contact = username+"-"+contactId;
         Message message = new Message(content, time, sent, user_contact);
         new InsertMessageAsyncTask(messageDao).execute(message);
         new UpdateContactWithLast(contactDao).execute(username, contactId, content, message.getCreated());
+        if(appApi != null) appApi.sendMessage(username, contactId, contactServer, message);
         return;
     }
 

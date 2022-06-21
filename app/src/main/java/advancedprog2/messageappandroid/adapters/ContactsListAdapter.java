@@ -2,6 +2,7 @@ package advancedprog2.messageappandroid.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,6 +69,7 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
                 intent.putExtra("contactName", current.getName());
                 intent.putExtra("contactId", current.getId());
                 intent.putExtra("username", username);
+                intent.putExtra("contactServer", current.getServer());
                 context.startActivity(intent);
             });
         }
