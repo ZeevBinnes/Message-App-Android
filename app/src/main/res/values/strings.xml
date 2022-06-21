@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Message App</string>
     <string name="BaseUrl">http://10.0.2.2:5180/api/</string>
+    <string name="channel_name">MessageApp</string>
 </resources>
