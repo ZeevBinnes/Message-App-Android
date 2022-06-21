@@ -34,8 +34,7 @@ public class Repository {
         userDao = localDb.userDao();
         contactDao = localDb.contactDao();
         messageDao = localDb.messageDao();
-//        appApi = new AppApi(localDb);
-        appApi = null;
+        appApi = new AppApi(localDb);
     }
 
     public LiveData<UserWithContacts> getUserWithContacts(String username) {
