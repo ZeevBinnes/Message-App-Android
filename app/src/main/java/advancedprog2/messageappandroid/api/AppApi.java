@@ -8,6 +8,7 @@ import java.util.List;
 
 import advancedprog2.messageappandroid.R;
 import advancedprog2.messageappandroid.database_classes.AppLocalDatabase;
+import advancedprog2.messageappandroid.database_classes.Repository;
 import advancedprog2.messageappandroid.entities.Contact;
 import advancedprog2.messageappandroid.entities.Message;
 import advancedprog2.messageappandroid.entities.User;
@@ -21,9 +22,11 @@ public class AppApi {
     Retrofit retrofit;
     WebAPI webAPI;
     AppLocalDatabase localDb;
+    private Repository repository;
 
-    public AppApi(AppLocalDatabase localDb){
+    public AppApi(AppLocalDatabase localDb, Repository repo){
         this.localDb = localDb;
+        this.repository = repo;
 
         retrofit = new Retrofit.Builder()
                 .baseUrl(ContextApplication.context.getString(R.string.BaseUrl))
@@ -47,8 +50,10 @@ public class AppApi {
                             contacts.add(c);
                         }
                     }
-                    localDb.contactDao().clearContactsOfUser(user);
-                    localDb.contactDao().insertList(contacts);
+                    repository.clearContactsOfUser(user);
+                    repository.insertContactList(contacts);
+//                    localDb.contactDao().clearContactsOfUser(user);
+//                    localDb.contactDao().insertList(contacts);
                 }).start();
             }
 
@@ -142,6 +147,8 @@ public class AppApi {
                 if (response.code() == 200) {
                     didLogin[0] = true;
                     didLogin[1] = true;
+                    if (repository.getUserById(user.getUsername()) == null) repository.insert(user);
+//                    localDb.userDao().insert(user);
                 } else if(response.code() == 400) {
                     didLogin[1] = true;
                 }
