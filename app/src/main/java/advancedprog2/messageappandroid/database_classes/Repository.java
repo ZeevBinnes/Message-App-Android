@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import androidx.lifecycle.LiveData;
 
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import advancedprog2.messageappandroid.api.AppApi;
@@ -27,7 +28,7 @@ public class Repository {
         userDao = localDb.userDao();
         contactDao = localDb.contactDao();
         messageDao = localDb.messageDao();
-        appApi = new AppApi(localDb);
+        appApi = new AppApi(localDb, this);
     }
 
     public LiveData<UserWithContacts> getUserWithContacts(String username) {
@@ -84,6 +85,14 @@ public class Repository {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void clearContactsOfUser(String username) {
+        new ClearContactsOfUserAsyncTask(contactDao).execute(username);
+    }
+
+    public void insertContactList(List<Contact> contacts) {
+        new InsertContactsAsyncTask(contactDao).execute(contacts);
     }
 
     public boolean addContact(String username, String contactId, String contactName, String contactServer) {
@@ -189,6 +198,27 @@ public class Repository {
         @Override
         protected Contact doInBackground(String... id) {
             return contactDao.findContact(id[0], id[1]);
+        }
+    }
+
+    private static class ClearContactsOfUserAsyncTask extends AsyncTask<String, Void, Void> {
+        private ContactDao contactDao;
+        private ClearContactsOfUserAsyncTask(ContactDao contactDao) {this.contactDao = contactDao;}
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            contactDao.clearContactsOfUser(strings[0]);
+            return null;
+        }
+    }
+    
+    private static class InsertContactsAsyncTask extends AsyncTask<List<Contact>, Void, Void> {
+        private ContactDao contactDao;
+        public InsertContactsAsyncTask(ContactDao contactDao) {this.contactDao = contactDao;}
+        @Override
+        protected Void doInBackground(List<Contact>... lists) {
+            contactDao.insertList(lists[0]);
+            return null;
         }
     }
 //
