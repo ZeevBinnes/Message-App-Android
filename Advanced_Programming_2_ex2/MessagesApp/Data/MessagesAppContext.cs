@@ -14,6 +14,11 @@ namespace MessagesApp.Data
         {
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Contact>().HasKey(c => new { c.Userid, c.Contactid });
+        }
+
         public DbSet<MessagesApp.Models.User> Users { get; set; }
 
         public DbSet<MessagesApp.Models.Message> Messages { get; set; }
