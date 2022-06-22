@@ -62,9 +62,8 @@ namespace MessagesApp.Controllers
             if (user.Password == data.pass)
             {
                 user.Token = data.token;
-
-                await _context.SaveChangesAsync();
                 _context.Entry(user).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
                 return Ok();
             }
             return BadRequest();
@@ -234,19 +233,22 @@ namespace MessagesApp.Controllers
             message.Time = DateTime.Now;
             _context.Messages.Add(message);
             await _context.SaveChangesAsync();
-            var fire = new FirebaseAdmin.Messaging.Message()
+            if (user.Token != null)
             {
-                Notification =
+                var fire = new FirebaseAdmin.Messaging.Message()
+                {
+                    Notification =
                 {
                     Body = message.Content,
                     Title = message.Contactid
                 },
-                Token = user.Token,
-            };
+                    Token = user.Token,
+                };
 
-            // Send a message to the device corresponding to the provided
-            // registration token.
-            string response = await FirebaseMessaging.DefaultInstance.SendAsync(fire);
+                // Send a message to the device corresponding to the provided
+                // registration token.
+                string response = await FirebaseMessaging.DefaultInstance.SendAsync(fire);
+            }
 
             if (hub.Clients.User(data.to) != null)
             {
