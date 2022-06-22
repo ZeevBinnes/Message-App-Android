@@ -2,6 +2,7 @@ package advancedprog2.messageappandroid.api;
 
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import advancedprog2.messageappandroid.R;
 import advancedprog2.messageappandroid.database_classes.AppLocalDatabase;
 import advancedprog2.messageappandroid.entities.Contact;
 import advancedprog2.messageappandroid.entities.Message;
+import advancedprog2.messageappandroid.entities.User;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -128,6 +130,56 @@ public class AppApi {
         });
         return didAdd[0];
 
+    }
+
+    public boolean login(User user, String token, boolean toLogin) {
+        boolean didLogin[] = {false, false};
+        ApiUser au = new ApiUser(user.getUsername(), user.getPassword(), token);
+        Call<Void> call = webAPI.login(au);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.code() == 200) {
+                    didLogin[0] = true;
+                    didLogin[1] = true;
+                } else if(response.code() == 400) {
+                    didLogin[1] = true;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
+        if (toLogin) return didLogin[0];
+        else return didLogin[1];
+    }
+
+    public boolean findUser(User user) {
+        int retval = 0;
+        ApiUser au = new ApiUser(user.getUsername(), user.getPassword(), null);
+        Call<Void> call = webAPI.login(au);
+        try {
+            retval = call.execute().code();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (retval == 400) return true;
+        else return false;
+    }
+
+    public boolean register(User user, String token) {
+        ApiUser au = new ApiUser(user.getUsername(), user.getPassword(), token);
+        Call<Void> call = webAPI.register(au);
+        int retval = 0;
+        try {
+            retval = call.execute().code();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (retval == 200) return true;
+        else return false;
     }
 
 }

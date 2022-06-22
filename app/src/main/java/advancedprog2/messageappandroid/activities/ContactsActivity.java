@@ -11,15 +11,10 @@ import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import advancedprog2.messageappandroid.R;
 import advancedprog2.messageappandroid.adapters.ContactsListAdapter;
 import advancedprog2.messageappandroid.database_classes.AppViewModel;
 import advancedprog2.messageappandroid.database_classes.UserWithContacts;
-import advancedprog2.messageappandroid.entities.Contact;
-import advancedprog2.messageappandroid.toShowClasses.ContactToShow;
 
 public class ContactsActivity extends AppCompatActivity {
 

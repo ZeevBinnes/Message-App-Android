@@ -4,21 +4,14 @@ import android.app.Application;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.room.Update;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 import advancedprog2.messageappandroid.api.AppApi;
 import advancedprog2.messageappandroid.entities.Contact;
 import advancedprog2.messageappandroid.entities.Message;
 import advancedprog2.messageappandroid.entities.User;
-import advancedprog2.messageappandroid.toShowClasses.ContactToShow;
 
 public class Repository {
     private AppLocalDatabase localDb;
@@ -58,6 +51,24 @@ public class Repository {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public boolean login(User user, String token) {
+        appApi.login(user, token, true);
+        User u1 = getUserById(user.getUsername());
+        if (u1 != null && u1.getPassword().equals(user.getPassword())) {
+            return true;
+        } else return false;
+    }
+
+    public boolean findUserInWeb(String username) {
+        User user = new User(username, "0");
+        return appApi.findUser(user);
+//        return appApi.login(user, "", false);
+    }
+
+    public boolean register(User user, String token) {
+        return appApi.register(user, token);
     }
 
     public void insert(User user){

@@ -24,7 +24,6 @@ import advancedprog2.messageappandroid.entities.User;
 public class LoginActivity extends AppCompatActivity {
 
     private AppViewModel appViewModel;
-//    private List<User> allUsers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,36 +36,38 @@ public class LoginActivity extends AppCompatActivity {
                 instanceIdResult ->
                         Session.Token = instanceIdResult.getToken());
 
-//        appViewModel.getAllUsers().observe(this, new Observer<List<User>>() {
-//            @Override
-//            public void onChanged(List<User> users) {
-//                allUsers = users;
-//            }
-//        });
-
         EditText edUserId = findViewById(R.id.loginUsername);
         EditText edPassword = findViewById(R.id.loginPassword);
         Button loginBtn = findViewById(R.id.loginSubmit);
+        Button btnToRegister = findViewById(R.id.login_btnToRegister);
         TextView errMsg = findViewById(R.id.loginErrMsg);
 
         loginBtn.setOnClickListener(v -> {
-            User u = appViewModel.getUserById(edUserId.getText().toString());
-            if (u == null || !(u.getPassword().equals(edPassword.getText().toString()))) {
-                errMsg.setText("wrong username or password");
-            } else {
+            User u = new User(edUserId.getText().toString(), edPassword.getText().toString());
+            if (appViewModel.login(u, Session.Token)) {
                 Intent intent = new Intent(this, ContactsActivity.class);
                 intent.putExtra("username", edUserId.getText().toString());
                 startActivity(intent);
+            } else {
+                errMsg.setText("wrong username or password.\n" +
+                        "might be waiting for response from the web.\n" +
+                        "if that is the case, wait a few seconds and try again.");
+                return;
             }
+//            User u = appViewModel.getUserById(edUserId.getText().toString());
+//            if (u == null || !(u.getPassword().equals(edPassword.getText().toString()))) {
+//                errMsg.setText("wrong username or password");
+//            } else {
+//                Intent intent = new Intent(this, ContactsActivity.class);
+//                intent.putExtra("username", edUserId.getText().toString());
+//                startActivity(intent);
+//            }
+        });
+
+        btnToRegister.setOnClickListener(v -> {
+            Intent intent = new Intent(this, RegisterActivity.class);
+            startActivity(intent);
         });
     }
 
-//    private User getUserById(String username) {
-//        for (User u : allUsers) {
-//            if (u.getUsername().equals(username)){
-//                return u;
-//            }
-//        }
-//        return null;
-//    }
 }

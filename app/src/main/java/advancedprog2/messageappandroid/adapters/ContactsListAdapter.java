@@ -2,7 +2,6 @@ package advancedprog2.messageappandroid.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +15,7 @@ import java.util.List;
 
 import advancedprog2.messageappandroid.R;
 import advancedprog2.messageappandroid.activities.ChatActivity;
-import advancedprog2.messageappandroid.activities.ContactsActivity;
 import advancedprog2.messageappandroid.entities.Contact;
-import advancedprog2.messageappandroid.toShowClasses.ContactToShow;
 
 public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapter.ContactViewHolder> {
 

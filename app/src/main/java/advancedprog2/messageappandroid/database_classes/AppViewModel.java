@@ -7,12 +7,8 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import java.util.Date;
-import java.util.List;
 
-import advancedprog2.messageappandroid.entities.Contact;
-import advancedprog2.messageappandroid.entities.Message;
 import advancedprog2.messageappandroid.entities.User;
-import advancedprog2.messageappandroid.toShowClasses.ContactToShow;
 
 public class AppViewModel extends AndroidViewModel {
 
@@ -32,6 +28,18 @@ public class AppViewModel extends AndroidViewModel {
 
     public void insert(User user) {
         repository.insert(user);
+    }
+
+    public boolean login(User user, String token) {
+        return repository.login(user, token);
+    }
+
+    public boolean findUserInWeb(String username) {
+        return repository.findUserInWeb(username);
+    }
+
+    public boolean register(User user, String token) {
+        return repository.register(user, token);
     }
 
     public boolean addContact(String username, String contactId, String contactName, String contactServer) {
