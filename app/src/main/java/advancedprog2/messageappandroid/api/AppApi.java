@@ -1,7 +1,5 @@
 package advancedprog2.messageappandroid.api;
 
-import android.widget.TextView;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +44,7 @@ public class AppApi {
                     List<Contact> contacts = new ArrayList<>();
                     if (response.body() != null) {
                         for (ApiContact ac : response.body()) {
-                            Contact c = new Contact(ac.Id, ac.Name, ac.Server, ac.Last, ac.Lastdate, user);
+                            Contact c = new Contact(ac.id, ac.name, ac.server, ac.last, ac.lastdate, user);
                             contacts.add(c);
                         }
                     }
@@ -72,7 +70,7 @@ public class AppApi {
                    List<Message> messages = new ArrayList<>();
                    if (response.body() != null) {
                        for (ApiMessage am : response.body()) {
-                           Message m = new Message(am.Content, am.Created, am.Sent, user_contact);
+                           Message m = new Message(am.content, am.created, am.sent, user_contact);
                            messages.add(m);
                        }
                    }
