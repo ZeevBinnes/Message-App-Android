@@ -242,7 +242,7 @@ namespace MessagesApp.Controllers
             {
                 var fire = new FirebaseAdmin.Messaging.Message()
                 {
-                    Notification =
+                    Notification = new Notification()
                 {
                     Body = message.Content,
                     Title = message.Contactid

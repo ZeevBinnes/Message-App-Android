@@ -5,6 +5,10 @@ using Microsoft.Extensions.DependencyInjection;
 using MessagesApp.Data;
 using MessagesApp.Hubs;
 using System.Text;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
+using FirebaseAdmin.Auth;
+using NPOI.Util;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +35,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+FirebaseApp.Create(new AppOptions()
+{
+    Credential = GoogleCredential.FromFile("firebase-adminsdk.json")
+}); 
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
