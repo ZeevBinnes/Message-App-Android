@@ -20,7 +20,8 @@ public class Repository {
     private ContactDao contactDao;
     private MessageDao messageDao;
     private LiveData<UserWithContacts> userWithContacts;
-    private LiveData<ContactWithMessages> contactWithMessages;
+//    private LiveData<ContactWithMessages> contactWithMessages;
+    private LiveData<List<Message>> messages;
     private AppApi appApi;
 
     public Repository(Application application) {
@@ -36,12 +37,19 @@ public class Repository {
         if (appApi != null) appApi.getContacts(username);
         return userWithContacts;
     }
-    public LiveData<ContactWithMessages> getContactWithMessages(String user, String contact) {
+
+    public LiveData<List<Message>> getContactsMessages(String user, String contact) {
         String user_contact = user+"-"+contact;
-        contactWithMessages = contactDao.getMessagesWithContact(user_contact);
-        if(appApi != null) appApi.getMessages(contact, user);
-        return contactWithMessages;
+        messages = messageDao.getContactsMessages(user_contact);
+        if(appApi != null) appApi.getMessages(user, contact);
+        return messages;
     }
+//    public LiveData<ContactWithMessages> getContactWithMessages(String user, String contact) {
+//        String user_contact = user+"-"+contact;
+//        contactWithMessages = contactDao.getMessagesWithContact(user_contact);
+//        if(appApi != null) appApi.getMessages(user, contact);
+//        return contactWithMessages;
+//    }
 
     public User getUserById(String username) {
         try {
@@ -108,7 +116,7 @@ public class Repository {
         Message message = new Message(content, time, sent, user_contact);
         new InsertMessageAsyncTask(messageDao).execute(message);
         new UpdateContactWithLast(contactDao).execute(username, contactId, content, message.getCreated());
-        if(appApi != null) appApi.sendMessage(contactId, username, contactServer, message);
+        if(appApi != null) appApi.sendMessage(username, contactId, contactServer, message);
         return;
     }
 

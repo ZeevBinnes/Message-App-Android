@@ -33,7 +33,6 @@ public class AppApi {
         webAPI = retrofit.create(WebAPI.class);
 
     }
-    // any methods needed
 
     public void getContacts(String user) {
         Call<List<ApiContact>> call = webAPI.GetContacts(user);
@@ -48,10 +47,10 @@ public class AppApi {
                             contacts.add(c);
                         }
                     }
-                    repository.clearContactsOfUser(user);
-                    repository.insertContactList(contacts);
-//                    localDb.contactDao().clearContactsOfUser(user);
-//                    localDb.contactDao().insertList(contacts);
+//                    repository.clearContactsOfUser(user);
+//                    repository.insertContactList(contacts);
+                    localDb.contactDao().clearContactsOfUser(user);
+                    localDb.contactDao().insertList(contacts);
                 }).start();
             }
 
@@ -76,7 +75,7 @@ public class AppApi {
                    }
                    localDb.messageDao().clearMessagesOfContact(user_contact);
                    localDb.messageDao().insertList(messages);
-                });
+                }).start();
             }
 
             @Override

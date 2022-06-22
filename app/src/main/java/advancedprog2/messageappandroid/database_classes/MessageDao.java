@@ -31,4 +31,7 @@ public interface MessageDao {
 
     @Insert
     void insertList(List<Message> messages);
+
+    @Query("SELECT * FROM Message WHERE user_contact = :user_contact")
+    LiveData<List<Message>> getContactsMessages(String user_contact);
 }

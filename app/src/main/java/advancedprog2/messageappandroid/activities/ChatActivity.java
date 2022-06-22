@@ -63,18 +63,19 @@ public class ChatActivity extends AppCompatActivity {
         messagesListLayout.setAdapter(adapter);
         messagesListLayout.setLayoutManager(new LinearLayoutManager(this));
 
-        appViewModel.getMessages(username, contactId).observe(this, new Observer<ContactWithMessages>() {
+        appViewModel.getMessages(username, contactId).observe(this, new Observer<List<Message>>() {
             @Override
-            public void onChanged(ContactWithMessages contactWithMessages) {
-                adapter.setMessages(contactWithMessages.messages);
+            public void onChanged(List<Message> messages) {
+                adapter.setMessages(messages);
                 messagesListLayout.smoothScrollToPosition(adapter.getItemCount());
             }
         });
 
-//        appViewModel.getMessages().observe(this, new Observer<List<Message>>() {
+//        appViewModel.getMessages(username, contactId).observe(this, new Observer<ContactWithMessages>() {
 //            @Override
-//            public void onChanged(List<Message> messages) {
-//                adapter.setMessages(messages);
+//            public void onChanged(ContactWithMessages contactWithMessages) {
+//                adapter.setMessages(contactWithMessages.messages);
+//                messagesListLayout.smoothScrollToPosition(adapter.getItemCount());
 //            }
 //        });
 
@@ -87,41 +88,8 @@ public class ChatActivity extends AppCompatActivity {
         sendMessageBtn.setOnClickListener(v -> {
             appViewModel.sendMessage(username, contactId, "text", edMessage.getText().toString(), contactServer);
             edMessage.setText("");
+            appViewModel.getMessages(username, contactId);
         });
-
-//        List<Message> messageList = new ArrayList<>();
-//        messageList.add(new Message("aaaa", new Date(), true));
-//        messageList.add(new Message("bbbbbbbbbb bbbbbbbbbbbbbbbbbbbbbbbbbbb bbbbbbbbbbbbbbbbbbbb bbbbbbbbbbbb bbbbbbbbbbbbbbb", new Date(), false));
-//        messageList.add(new Message("cccc", new Date(), true));
-//        messageList.add(new Message("dddd", new Date(), false));
-//        messageList.add(new Message("aaaa", new Date(), true));
-//        messageList.add(new Message("bbbbbbbbbb bbbbbbbbbbbbbbbbbbbbbbbbbbb bbbbbbbbbbbbbbbbbbbb bbbbbbbbbbbb bbbbbbbbbbbbbbb", new Date(), false));
-//        messageList.add(new Message("cccc", new Date(), true));
-//        messageList.add(new Message("dddd", new Date(), false));
-//        messageList.add(new Message("aaaa", new Date(), true));
-//        messageList.add(new Message("bbbbbbbbbb bbbbbbbbbbbbbbbbbbbbbbbbbbb bbbbbbbbbbbbbbbbbbbb bbbbbbbbbbbb bbbbbbbbbbbbbbb", new Date(), true));
-//        messageList.add(new Message("cccc", new Date(), true));
-//        messageList.add(new Message("dddd", new Date(), false));
-//        messageList.add(new Message("aaaa", new Date(), true));
-//        messageList.add(new Message("bbbbbbbbbb bbbbbbbbbbbbbbbbbbbbbbbbbbb bbbbbbbbbbbbbbbbbbbb bbbbbbbbbbbb bbbbbbbbbbbbbbb", new Date(), false));
-//        messageList.add(new Message("cccc", new Date(), true));
-//        messageList.add(new Message("dddd", new Date(), false));
-//        messageList.add(new Message("aaaa", new Date(), true));
-//        messageList.add(new Message("bbbbbbbbbb bbbbbbbbbbbbbbbbbbbbbbbbbbb bbbbbbbbbbbbbbbbbbbb bbbbbbbbbbbb bbbbbbbbbbbbbbb", new Date(), false));
-//        messageList.add(new Message("cccc", new Date(), false));
-//        messageList.add(new Message("dddd", new Date(), false));
-//        messageList.add(new Message("aaaa", new Date(), true));
-//        messageList.add(new Message("bbbbbbbbbb bbbbbbbbbbbbbbbbbbbbbbbbbbb bbbbbbbbbbbbbbbbbbbb bbbbbbbbbbbb bbbbbbbbbbbbbbb", new Date(), true));
-//        messageList.add(new Message("cccc", new Date(), true));
-//        messageList.add(new Message("dddd", new Date(), false));
-//        messageList.add(new Message("aaaa", new Date(), true));
-//        messageList.add(new Message("bbbbbbbbbb bbbbbbbbbbbbbbbbbbbbbbbbbbb bbbbbbbbbbbbbbbbbbbb bbbbbbbbbbbb bbbbbbbbbbbbbbb", new Date(), false));
-//        messageList.add(new Message("cccc", new Date(), true));
-//        messageList.add(new Message("dddd", new Date(), false));
-
-//        adapter.setMessages(messageList);
-
-
 
     }
 }
