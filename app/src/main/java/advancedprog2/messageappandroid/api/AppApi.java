@@ -76,7 +76,7 @@ public class AppApi {
                    }
                    localDb.messageDao().clearMessagesOfContact(user_contact);
                    localDb.messageDao().insertList(messages);
-                });
+                }).start();
             }
 
             @Override
