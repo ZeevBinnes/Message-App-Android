@@ -7,7 +7,9 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import java.util.Date;
+import java.util.List;
 
+import advancedprog2.messageappandroid.entities.Message;
 import advancedprog2.messageappandroid.entities.User;
 
 public class AppViewModel extends AndroidViewModel {
@@ -22,8 +24,8 @@ public class AppViewModel extends AndroidViewModel {
     public LiveData<UserWithContacts> getContacts(String username) {
         return repository.getUserWithContacts(username);
     }
-    public LiveData<ContactWithMessages> getMessages(String user, String contact) {
-        return repository.getContactWithMessages(user, contact);
+    public LiveData<List<Message>> getMessages(String user, String contact) {
+        return repository.getContactsMessages(user, contact);
     }
 
     public void insert(User user) {

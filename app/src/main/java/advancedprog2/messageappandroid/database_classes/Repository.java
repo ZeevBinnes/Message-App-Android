@@ -20,7 +20,8 @@ public class Repository {
     private ContactDao contactDao;
     private MessageDao messageDao;
     private LiveData<UserWithContacts> userWithContacts;
-    private LiveData<ContactWithMessages> contactWithMessages;
+//    private LiveData<ContactWithMessages> contactWithMessages;
+    private LiveData<List<Message>> messages;
     private AppApi appApi;
 
     public Repository(Application application) {
@@ -36,12 +37,19 @@ public class Repository {
         if (appApi != null) appApi.getContacts(username);
         return userWithContacts;
     }
-    public LiveData<ContactWithMessages> getContactWithMessages(String user, String contact) {
+
+    public LiveData<List<Message>> getContactsMessages(String user, String contact) {
         String user_contact = user+"-"+contact;
-        contactWithMessages = contactDao.getMessagesWithContact(user_contact);
+        messages = messageDao.getContactsMessages(user_contact);
         if(appApi != null) appApi.getMessages(user, contact);
-        return contactWithMessages;
+        return messages;
     }
+//    public LiveData<ContactWithMessages> getContactWithMessages(String user, String contact) {
+//        String user_contact = user+"-"+contact;
+//        contactWithMessages = contactDao.getMessagesWithContact(user_contact);
+//        if(appApi != null) appApi.getMessages(user, contact);
+//        return contactWithMessages;
+//    }
 
     public User getUserById(String username) {
         try {
