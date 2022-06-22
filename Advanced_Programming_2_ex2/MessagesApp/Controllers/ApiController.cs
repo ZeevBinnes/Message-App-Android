@@ -232,6 +232,11 @@ namespace MessagesApp.Controllers
             message.Sent = false;
             message.Time = DateTime.Now;
             _context.Messages.Add(message);
+
+            contact.LastContent = message.Content;
+            contact.LastDate = message.Time;
+            _context.Entry(contact).State = EntityState.Modified;
+
             await _context.SaveChangesAsync();
             if (user.Token != null)
             {
