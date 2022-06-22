@@ -2,8 +2,9 @@ package advancedprog2.messageappandroid.api;
 
 public class ApiMessage {
     public int id;
-
     public String content;
+    public String created;
+    public Boolean sent;
 
     public int getId() {
         return id;
@@ -37,7 +38,5 @@ public class ApiMessage {
         this.sent = sent;
     }
 
-    public String created;
 
-    public Boolean sent;
 }
