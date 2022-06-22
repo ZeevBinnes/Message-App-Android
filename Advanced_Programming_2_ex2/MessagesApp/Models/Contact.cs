@@ -5,6 +5,7 @@ namespace MessagesApp.Models
 {
     public class Contact
     {
+
         public string Userid { get; set; }
 
         public string Contactid { get; set; }
