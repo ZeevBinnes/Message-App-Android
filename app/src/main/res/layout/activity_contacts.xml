@@ -62,11 +62,11 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
+    <EditText
+        android:id="@+id/contacts_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:placeholderText="Search"
-        android:padding="3dp"
+        android:hint="Search"
         />
 
     <androidx.recyclerview.widget.RecyclerView
