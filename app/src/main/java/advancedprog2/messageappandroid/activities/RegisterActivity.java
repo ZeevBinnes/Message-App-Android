@@ -31,9 +31,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         appViewModel = new ViewModelProvider(this).get(AppViewModel.class);
 
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this,
-                instanceIdResult ->
-                        Session.Token = instanceIdResult.getToken());
+
 
         EditText edUserId = findViewById(R.id.registerUsername);
         EditText edPassword = findViewById(R.id.registerPassword);

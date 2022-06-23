@@ -22,18 +22,19 @@ public class Repository {
     private LiveData<UserWithContacts> userWithContacts;
 //    private LiveData<ContactWithMessages> contactWithMessages;
     private LiveData<List<Message>> messages;
-    private AppApi appApi;
+//    private AppApi appApi;
 
     public Repository(Application application) {
         localDb = AppLocalDatabase.getInstance(application.getApplicationContext());
         userDao = localDb.userDao();
         contactDao = localDb.contactDao();
         messageDao = localDb.messageDao();
-        appApi = new AppApi(localDb, this);
+        //appApi = new AppApi(localDb, this);
     }
 
     public LiveData<UserWithContacts> getUserWithContacts(String username) {
         userWithContacts = userDao.getContactsOfUser(username);
+        AppApi appApi = new AppApi(localDb, this);
         if (appApi != null) appApi.getContacts(username);
         return userWithContacts;
     }
@@ -41,6 +42,7 @@ public class Repository {
     public LiveData<List<Message>> getContactsMessages(String user, String contact) {
         String user_contact = user+"-"+contact;
         messages = messageDao.getContactsMessages(user_contact);
+        AppApi appApi = new AppApi(localDb, this);
         if(appApi != null) appApi.getMessages(user, contact);
         return messages;
     }
@@ -63,6 +65,7 @@ public class Repository {
     }
 
     public boolean login(User user, String token) {
+        AppApi appApi = new AppApi(localDb, this);
         appApi.login(user, token);
         User u1 = getUserById(user.getUsername());
         if (u1 != null && u1.getPassword().equals(user.getPassword())) {
@@ -71,6 +74,7 @@ public class Repository {
     }
 
     public boolean register(User user, String token) {
+        AppApi appApi = new AppApi(localDb, this);
         return appApi.register(user, token);
     }
 
@@ -94,6 +98,7 @@ public class Repository {
         if (this.findContact(username, contactId) != null) return false;
         Contact contact = new Contact(contactId, contactName, contactServer, null, null, username);
 //        new InsertContactAsyncTask(userDao).execute(contact); // maybe not needed
+        AppApi appApi = new AppApi(localDb, this);
         return appApi.addContact(username, contact);
     }
 
@@ -102,6 +107,7 @@ public class Repository {
         Message message = new Message(content, time, sent, user_contact);
         new InsertMessageAsyncTask(messageDao).execute(message);
         new UpdateContactWithLast(contactDao).execute(username, contactId, content, message.getCreated());
+        AppApi appApi = new AppApi(localDb, this);
         if(appApi != null) appApi.sendMessage(username, contactId, contactServer, message);
         return;
     }

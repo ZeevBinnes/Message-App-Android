@@ -1,5 +1,9 @@
 package advancedprog2.messageappandroid.api;
 
+import android.content.Intent;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -9,10 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import advancedprog2.messageappandroid.R;
+import advancedprog2.messageappandroid.activities.ContactsActivity;
+import advancedprog2.messageappandroid.activities.LoginActivity;
 import advancedprog2.messageappandroid.database_classes.AppLocalDatabase;
 import advancedprog2.messageappandroid.database_classes.Repository;
 import advancedprog2.messageappandroid.entities.Contact;
 import advancedprog2.messageappandroid.entities.Message;
+import advancedprog2.messageappandroid.entities.Session;
 import advancedprog2.messageappandroid.entities.User;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,7 +38,7 @@ public class AppApi {
         this.repository = repo;
 
         retrofit = new Retrofit.Builder()
-                .baseUrl(ContextApplication.context.getString(R.string.BaseUrl))
+                .baseUrl(Session.server)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         webAPI = retrofit.create(WebAPI.class);
@@ -178,7 +185,7 @@ public class AppApi {
         });
 
         try {
-            Thread.sleep(2000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
