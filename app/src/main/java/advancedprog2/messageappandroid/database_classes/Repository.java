@@ -63,17 +63,11 @@ public class Repository {
     }
 
     public boolean login(User user, String token) {
-        appApi.login(user, token, true);
+        appApi.login(user, token);
         User u1 = getUserById(user.getUsername());
         if (u1 != null && u1.getPassword().equals(user.getPassword())) {
             return true;
         } else return false;
-    }
-
-    public boolean findUserInWeb(String username) {
-        User user = new User(username, "0");
-        return appApi.findUser(user);
-//        return appApi.login(user, "", false);
     }
 
     public boolean register(User user, String token) {
@@ -93,14 +87,6 @@ public class Repository {
             e.printStackTrace();
         }
         return null;
-    }
-
-    public void clearContactsOfUser(String username) {
-        new ClearContactsOfUserAsyncTask(contactDao).execute(username);
-    }
-
-    public void insertContactList(List<Contact> contacts) {
-        new InsertContactsAsyncTask(contactDao).execute(contacts);
     }
 
     public boolean addContact(String username, String contactId, String contactName, String contactServer) {
@@ -209,55 +195,4 @@ public class Repository {
         }
     }
 
-    private static class ClearContactsOfUserAsyncTask extends AsyncTask<String, Void, Void> {
-        private ContactDao contactDao;
-        private ClearContactsOfUserAsyncTask(ContactDao contactDao) {this.contactDao = contactDao;}
-
-        @Override
-        protected Void doInBackground(String... strings) {
-            contactDao.clearContactsOfUser(strings[0]);
-            return null;
-        }
-    }
-    
-    private static class InsertContactsAsyncTask extends AsyncTask<List<Contact>, Void, Void> {
-        private ContactDao contactDao;
-        public InsertContactsAsyncTask(ContactDao contactDao) {this.contactDao = contactDao;}
-        @Override
-        protected Void doInBackground(List<Contact>... lists) {
-            contactDao.insertList(lists[0]);
-            return null;
-        }
-    }
-//
-//    private static class UpdateUserAsyncTask extends AsyncTask<User, Void, Void> {
-//
-//        private UserDao userDao;
-//
-//        private UpdateUserAsyncTask(UserDao userDao) {
-//            this.userDao = userDao;
-//        }
-//
-//        @Override
-//        protected Void doInBackground(User... users) {
-//            userDao.update(users[0]);
-//            return null;
-//        }
-//    }
-//
-//    private static class DeleteUserAsyncTask extends AsyncTask<User, Void, Void> {
-//
-//        private UserDao userDao;
-//
-//        private DeleteUserAsyncTask(UserDao userDao) {
-//            this.userDao = userDao;
-//        }
-//
-//        @Override
-//        protected Void doInBackground(User... users) {
-//            userDao.delete(users[0]);
-//            return null;
-//        }
-//    }
-//
 }

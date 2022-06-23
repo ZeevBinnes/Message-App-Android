@@ -52,7 +52,9 @@ public class AddContactActivity extends AppCompatActivity {
                 intent.putExtra("username", username);
                 startActivity(intent);
             } else {
-                errMsg.setText("Failed To Add Contact.");
+                errMsg.setText("Failed To Add Contact.\n" +
+                        "might be waiting for response from the web.\n" +
+                        "go back to contacts, and see if the contact was added.");
                 return;
             }
         });

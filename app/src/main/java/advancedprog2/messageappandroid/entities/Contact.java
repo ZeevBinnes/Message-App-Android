@@ -11,14 +11,14 @@ import java.util.List;
 public class Contact {
     @PrimaryKey(autoGenerate = false)
     @NonNull
+    private String user_contact;
     private String id;
     private String name;
     private String server;
-//    private List<Message> messages;
+    //    private List<Message> messages;
     private String last;
     private String lastdate;
     private String user;
-    private String user_contact;
 
     public Contact(@NonNull String id, String name, String server, String last, String lastdate, String user) {
         this.id = id;

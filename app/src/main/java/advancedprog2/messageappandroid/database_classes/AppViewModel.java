@@ -36,10 +36,6 @@ public class AppViewModel extends AndroidViewModel {
         return repository.login(user, token);
     }
 
-    public boolean findUserInWeb(String username) {
-        return repository.findUserInWeb(username);
-    }
-
     public boolean register(User user, String token) {
         return repository.register(user, token);
     }

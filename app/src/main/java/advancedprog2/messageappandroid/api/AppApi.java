@@ -47,13 +47,10 @@ public class AppApi {
                             contacts.add(c);
                         }
                     }
-//                    repository.clearContactsOfUser(user);
-//                    repository.insertContactList(contacts);
                     localDb.contactDao().clearContactsOfUser(user);
                     localDb.contactDao().insertList(contacts);
                 }).start();
             }
-
             @Override
             public void onFailure(Call<List<ApiContact>> call, Throwable t) { }
         });
@@ -77,7 +74,6 @@ public class AppApi {
                    localDb.messageDao().insertList(messages);
                 }).start();
             }
-
             @Override
             public void onFailure(Call<List<ApiMessage>> call, Throwable t) { }
         });
@@ -93,7 +89,6 @@ public class AppApi {
             @Override
             public void onFailure(Call<Void> call, Throwable t) { }
         });
-        // do I need to set "af" again?
         Call<Void> call2 = webAPI.PostMessage(contact, user, af);
         call2.enqueue(new Callback<Void>() {
             @Override
@@ -108,7 +103,7 @@ public class AppApi {
 
     public boolean addContact(String username, Contact contact) {
         final boolean[] didAdd = {false};
-        ApiFormat af = new ApiFormat(username, contact.getId(), null, contact.getServer());
+        ApiFormat af = new ApiFormat(username, contact.getId(), null, "localhost:5180");
         Call<Void> call1 = webAPI.Invitation(af);
         call1.enqueue(new Callback<Void>() {
             @Override
@@ -130,12 +125,17 @@ public class AppApi {
             @Override
             public void onFailure(Call<Void> call, Throwable t) {}
         });
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return didAdd[0];
 
     }
 
-    public boolean login(User user, String token, boolean toLogin) {
-        boolean didLogin[] = {false, false};
+    public boolean login(User user, String token) {
+        boolean didLogin[] = {false};
         ApiUser au = new ApiUser(user.getUsername(), user.getPassword(), token);
         Call<Void> call = webAPI.login(au);
         call.enqueue(new Callback<Void>() {
@@ -143,47 +143,40 @@ public class AppApi {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.code() == 200) {
                     didLogin[0] = true;
-                    didLogin[1] = true;
                     if (repository.getUserById(user.getUsername()) == null) repository.insert(user);
 //                    localDb.userDao().insert(user);
-                } else if(response.code() == 400) {
-                    didLogin[1] = true;
                 }
             }
-
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-
-            }
+            public void onFailure(Call<Void> call, Throwable t) { }
         });
-        if (toLogin) return didLogin[0];
-        else return didLogin[1];
-    }
-
-    public boolean findUser(User user) {
-        int retval = 0;
-        ApiUser au = new ApiUser(user.getUsername(), user.getPassword(), null);
-        Call<Void> call = webAPI.login(au);
         try {
-            retval = call.execute().code();
-        } catch (IOException e) {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        if (retval == 400) return true;
-        else return false;
+        return didLogin[0];
     }
 
     public boolean register(User user, String token) {
+        boolean didRegister[] = {false};
         ApiUser au = new ApiUser(user.getUsername(), user.getPassword(), token);
         Call<Void> call = webAPI.register(au);
-        int retval = 0;
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.code() == 200) didRegister[0] = true;
+            }
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) { }
+        });
+
         try {
-            retval = call.execute().code();
-        } catch (IOException e) {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        if (retval == 200) return true;
-        else return false;
+        return didRegister[0];
     }
 
 }
