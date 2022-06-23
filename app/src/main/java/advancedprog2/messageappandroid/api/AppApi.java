@@ -122,7 +122,12 @@ public class AppApi {
     public boolean addContact(String username, Contact contact) {
         final boolean[] didAdd = {false};
         ApiFormat af = new ApiFormat(username, contact.getId(), null, Session.server);
-        Call<Void> call1 = webAPI.Invitation(af);
+        Retrofit  retrofit2 = new Retrofit.Builder()
+                .baseUrl("http://" + contact.getServer() + "/api/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        WebAPI webAPI2 = retrofit2.create(WebAPI.class);
+        Call<Void> call1 = webAPI2.Invitation(af);
         call1.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {}
