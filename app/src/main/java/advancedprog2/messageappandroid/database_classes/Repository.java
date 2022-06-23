@@ -4,6 +4,7 @@ import android.app.Application;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import java.util.Date;
 import java.util.List;
@@ -23,6 +24,7 @@ public class Repository {
 //    private LiveData<ContactWithMessages> contactWithMessages;
     private LiveData<List<Message>> messages;
 //    private AppApi appApi;
+    public MutableLiveData<String> errMsg;
 
     public Repository(Application application) {
         localDb = AppLocalDatabase.getInstance(application.getApplicationContext());
@@ -30,6 +32,7 @@ public class Repository {
         contactDao = localDb.contactDao();
         messageDao = localDb.messageDao();
         //appApi = new AppApi(localDb, this);
+        errMsg = new MutableLiveData<>();
     }
 
     public LiveData<UserWithContacts> getUserWithContacts(String username) {

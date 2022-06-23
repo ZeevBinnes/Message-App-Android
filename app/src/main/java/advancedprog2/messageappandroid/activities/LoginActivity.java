@@ -17,6 +17,7 @@ import java.util.List;
 
 import advancedprog2.messageappandroid.R;
 import advancedprog2.messageappandroid.database_classes.AppViewModel;
+import advancedprog2.messageappandroid.database_classes.UserWithContacts;
 import advancedprog2.messageappandroid.entities.Contact;
 import advancedprog2.messageappandroid.entities.Session;
 import advancedprog2.messageappandroid.entities.User;
@@ -42,16 +43,26 @@ public class LoginActivity extends AppCompatActivity {
         Button btnToRegister = findViewById(R.id.login_btnToRegister);
         TextView errMsg = findViewById(R.id.loginErrMsg);
 
+        appViewModel.errMsg().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                if (s.equals("OK")) {
+                    serverLogin(edUserId.getText().toString());
+                } else { errMsg.setText(s); }
+            }
+        });
+
         loginBtn.setOnClickListener(v -> {
+
             User u = new User(edUserId.getText().toString(), edPassword.getText().toString());
             if (appViewModel.login(u, Session.Token)) {
                 Intent intent = new Intent(this, ContactsActivity.class);
                 intent.putExtra("username", edUserId.getText().toString());
                 startActivity(intent);
             } else {
-                errMsg.setText("wrong username or password.\n" +
-                        "might be waiting for response from the web.\n" +
-                        "if that is the case, wait a few seconds and try again.");
+//                errMsg.setText("wrong username or password.\n" +
+//                        "might be waiting for response from the web.\n" +
+//                        "if that is the case, wait a few seconds and try again.");
                 return;
             }
 //            User u = appViewModel.getUserById(edUserId.getText().toString());
@@ -68,6 +79,12 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(this, RegisterActivity.class);
             startActivity(intent);
         });
+    }
+
+    private void serverLogin(String username) {
+        Intent intent = new Intent(this, ContactsActivity.class);
+        intent.putExtra("username", username);
+        startActivity(intent);
     }
 
 }

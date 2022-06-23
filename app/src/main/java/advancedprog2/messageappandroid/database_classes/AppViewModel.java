@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import java.util.Date;
 import java.util.List;
@@ -27,6 +28,10 @@ public class AppViewModel extends AndroidViewModel {
 
     public LiveData<List<Message>> getMessages(String user, String contact) {
         return repository.getContactsMessages(user, contact);
+    }
+
+    public MutableLiveData<String> errMsg() {
+        return repository.errMsg;
     }
 
     public void insert(User user) {

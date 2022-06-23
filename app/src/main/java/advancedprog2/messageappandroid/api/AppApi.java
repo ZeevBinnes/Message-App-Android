@@ -3,6 +3,7 @@ package advancedprog2.messageappandroid.api;
 import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.MutableLiveData;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -157,17 +158,17 @@ public class AppApi {
                 if (response.code() == 200) {
                     didLogin[0] = true;
                     if (repository.getUserById(user.getUsername()) == null) repository.insert(user);
+                    repository.errMsg.setValue("OK");
 //                    localDb.userDao().insert(user);
+                } else {
+                    repository.errMsg.setValue("incorrect username or password");
                 }
             }
             @Override
-            public void onFailure(Call<Void> call, Throwable t) { }
+            public void onFailure(Call<Void> call, Throwable t) {
+                repository.errMsg.setValue("Failed to connect to server");
+            }
         });
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         return didLogin[0];
     }
 
