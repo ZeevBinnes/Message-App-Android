@@ -1,6 +1,7 @@
 package advancedprog2.messageappandroid.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
@@ -36,6 +37,16 @@ public class AddContactActivity extends AppCompatActivity {
         Button backBtn = findViewById(R.id.addContact_btnBack);
         TextView errMsg = findViewById(R.id.addContact_errMsg);
 
+        appViewModel.errMsg().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                if (s.equals("OK")) {
+                    errMsg.setText("");
+                    backBtn.callOnClick();
+                } else { errMsg.setText(s); }
+            }
+        });
+
         backBtn.setOnClickListener(v -> {
             Intent intent = new Intent(this, ContactsActivity.class);
             intent.putExtra("username", username);
@@ -43,20 +54,18 @@ public class AddContactActivity extends AppCompatActivity {
         });
 
         addContactBtn.setOnClickListener(v -> {
+            if (username.equals(edContactId.getText().toString())) {
+                errMsg.setText("you can't add yourself as a contact");
+                return;
+            }
             boolean didAdd = appViewModel.addContact(username,
                     edContactId.getText().toString(),
                     edContactName.getText().toString(),
                     edContactServer.getText().toString());
-            if (didAdd) {
-                Intent intent = new Intent(this, ContactsActivity.class);
-                intent.putExtra("username", username);
-                startActivity(intent);
-            } else {
-                errMsg.setText("Failed To Add Contact.\n" +
-                        "might be waiting for response from the web.\n" +
-                        "go back to contacts, and see if the contact was added.");
-                return;
+            if (!didAdd) {
+                errMsg.setText("you have this user as a contact already");
             }
+            return;
         });
     }
 }

@@ -86,14 +86,5 @@ public class ContactsActivity extends AppCompatActivity {
             }
         });
 
-//        appViewModel.getContacts().observe(this, new Observer<List<Contact>>() {
-//            @Override
-//            public void onChanged(List<Contact> contacts) {
-//                adapter.setContacts(contacts);
-//            }
-//        });
-
-
-
     }
 }

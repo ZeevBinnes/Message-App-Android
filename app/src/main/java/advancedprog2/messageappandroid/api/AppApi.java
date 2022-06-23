@@ -120,8 +120,7 @@ public class AppApi {
         });
     }
 
-    public boolean addContact(String username, Contact contact) {
-        final boolean[] didAdd = {false};
+    public void addContact(String username, Contact contact) {
         ApiFormat af = new ApiFormat(username, contact.getId(), null, Session.server);
         Retrofit  retrofit2 = new Retrofit.Builder()
                 .baseUrl("http://" + contact.getServer() + "/api/")
@@ -131,42 +130,44 @@ public class AppApi {
         Call<Void> call1 = webAPI2.Invitation(af);
         call1.enqueue(new Callback<Void>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {}
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {}
-        });
-
-        ApiContact ac = new ApiContact(contact.getId(), contact.getName(), contact.getServer(), contact.getLast(), contact.getLastdate());
-        Call<Void> call2 = webAPI.AddContact(username, ac);
-        call2.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call2, Response<Void> response) {
-                getContacts(username);
-                didAdd[0] = true;
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    ApiContact ac = new ApiContact(contact.getId(), contact.getName(), contact.getServer(), contact.getLast(), contact.getLastdate());
+                    Call<Void> call2 = webAPI.AddContact(username, ac);
+                    call2.enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call2, Response<Void> response) {
+                            if (response.isSuccessful()) {
+                                getContacts(username);
+                                repository.errMsg.setValue("OK");
+                            } else {
+                                repository.errMsg.setValue("Failed to add contact");
+                            }
+                        }
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            repository.errMsg.setValue("Failed to connect to server");
+                        }
+                    });
+                } else {
+                    repository.errMsg.setValue("Failed to add contact");
+                }
             }
-
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {}
+            public void onFailure(Call<Void> call, Throwable t) {
+                repository.errMsg.setValue("Failed to connect to contact's server");
+            }
         });
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return didAdd[0];
-
+        return;
     }
 
-    public boolean login(User user, String token) {
-        boolean didLogin[] = {false};
+    public void login(User user, String token) {
         ApiUser au = new ApiUser(user.getUsername(), user.getPassword(), token);
         Call<Void> call = webAPI.login(au);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.code() == 200) {
-                    didLogin[0] = true;
                     if (repository.getUserById(user.getUsername()) == null) repository.insert(user);
                     repository.errMsg.setValue("OK");
 //                    localDb.userDao().insert(user);
@@ -179,28 +180,27 @@ public class AppApi {
                 repository.errMsg.setValue("Failed to connect to server");
             }
         });
-        return didLogin[0];
+        return;
     }
 
-    public boolean register(User user, String token) {
-        boolean didRegister[] = {false};
+    public void register(User user, String token) {
         ApiUser au = new ApiUser(user.getUsername(), user.getPassword(), token);
         Call<Void> call = webAPI.register(au);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.code() == 200) didRegister[0] = true;
+                if (response.code() == 200) {
+                    if (repository.getUserById(user.getUsername()) == null) repository.insert(user);
+                    repository.errMsg.setValue("OK");
+                }
+                else repository.errMsg.setValue("Register Failed. try a different username.");
             }
             @Override
-            public void onFailure(Call<Void> call, Throwable t) { }
+            public void onFailure(Call<Void> call, Throwable t) {
+                repository.errMsg.setValue("Failed to connect to server");
+            }
         });
-
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return didRegister[0];
+        return;
     }
 
 }

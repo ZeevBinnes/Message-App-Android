@@ -39,6 +39,16 @@ public class RegisterActivity extends AppCompatActivity {
         Button btnToLogin = findViewById(R.id.register_btnToLogin);
         TextView errMsg = findViewById(R.id.registerErrMsg);
 
+        appViewModel.errMsg().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                if (s.equals("OK")) {
+                    errMsg.setText("");
+                    serverLogin(edUserId.getText().toString());
+                } else { errMsg.setText(s); }
+            }
+        });
+
         loginBtn.setOnClickListener(v -> {
             String username = edUserId.getText().toString();
             String password = edPassword.getText().toString();
@@ -48,45 +58,8 @@ public class RegisterActivity extends AppCompatActivity {
                 return;
             }
             User u = new User(username, password);
-            if (appViewModel.register(u, Session.Token)) {
-                Intent intent = new Intent(this, ContactsActivity.class);
-                intent.putExtra("username", u.getUsername());
-                startActivity(intent);
-            } else {
-                errMsg.setText("Register Failed.\n" +
-                        "might be waiting for response from the web.\n" +
-                        "if that is the case, wait a few seconds and try to Login.");
-                return;
-            }
-//
-//            if (appViewModel.findUserInWeb(u.getUsername())) {
-//                errMsg.setText("Register Failed. please try a different username");
-//                return;
-//            } else {
-//                if (checkValidity(u.getUsername(), u.getPassword())) {
-//                    if (appViewModel.register(u, Session.Token)) {
-//                        Intent intent = new Intent(this, ContactsActivity.class);
-//                        intent.putExtra("username", u.getUsername());
-//                        startActivity(intent);
-//                    } else {
-//                        errMsg.setText("Register Failed");
-//                    }
-//                } else {
-//                    errMsg.setText("invalid username or password");
-//                }
-//            }
-
-
-//            User u = appViewModel.getUserById(edUserId.getText().toString());
-//            if (u != null) {
-//                errMsg.setText("Register Failed. please try a different username");
-//                return;
-//            } else {
-//                appViewModel.insert(new User(edUserId.getText().toString(), edPassword.getText().toString()));
-//                Intent intent = new Intent(this, ContactsActivity.class);
-//                intent.putExtra("username", edUserId.getText().toString());
-//                startActivity(intent);
-//            }
+            appViewModel.register(u, Session.Token);
+            return;
         });
 
         btnToLogin.setOnClickListener(v -> {
@@ -127,5 +100,11 @@ public class RegisterActivity extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+    private void serverLogin(String username) {
+        Intent intent = new Intent(this, ContactsActivity.class);
+        intent.putExtra("username", username);
+        startActivity(intent);
     }
 }

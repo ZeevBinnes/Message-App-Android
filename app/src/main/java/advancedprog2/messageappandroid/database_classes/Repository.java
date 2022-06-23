@@ -78,7 +78,8 @@ public class Repository {
 
     public boolean register(User user, String token) {
         AppApi appApi = new AppApi(localDb, this);
-        return appApi.register(user, token);
+        appApi.register(user, token);
+        return false;
     }
 
     public void insert(User user){
@@ -102,7 +103,8 @@ public class Repository {
         Contact contact = new Contact(contactId, contactName, contactServer, null, null, username);
 //        new InsertContactAsyncTask(userDao).execute(contact); // maybe not needed
         AppApi appApi = new AppApi(localDb, this);
-        return appApi.addContact(username, contact);
+        appApi.addContact(username, contact);
+        return true;
     }
 
     public void addMessage(String username, String contactId, String type, String content, boolean sent, Date time, String contactServer) {
@@ -113,6 +115,18 @@ public class Repository {
         AppApi appApi = new AppApi(localDb, this);
         if(appApi != null) appApi.sendMessage(username, contactId, contactServer, message);
         return;
+    }
+
+    public List<Message> getMessagesAsList(String user, String contact) {
+        String user_contact = user+"-"+contact;
+        try {
+            return new MessagesListAsyncTask(messageDao).execute(user_contact).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private static class InsertUserAsyncTask extends AsyncTask<User, Void, Void> {
@@ -147,7 +161,6 @@ public class Repository {
 
     private static class InsertMessageAsyncTask extends AsyncTask<Message, Void, Void> {
 
-        private ContactDao contactDao;
         private MessageDao messageDao;
 
         private InsertMessageAsyncTask(MessageDao messageDao) {
@@ -201,6 +214,21 @@ public class Repository {
         @Override
         protected Contact doInBackground(String... id) {
             return contactDao.findContact(id[0], id[1]);
+        }
+    }
+
+    private static class MessagesListAsyncTask extends AsyncTask<String, Void, List<Message>> {
+
+        private MessageDao messageDao;
+
+        private MessagesListAsyncTask(MessageDao messageDao) {
+            this.messageDao = messageDao;
+        }
+
+        @Override
+        protected List<Message> doInBackground(String... strings) {
+            messageDao.getMessagesAsList(strings[0]);
+            return null;
         }
     }
 

@@ -47,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onChanged(String s) {
                 if (s.equals("OK")) {
+                    errMsg.setText("");
                     serverLogin(edUserId.getText().toString());
                 } else { errMsg.setText(s); }
             }
@@ -60,19 +61,8 @@ public class LoginActivity extends AppCompatActivity {
                 intent.putExtra("username", edUserId.getText().toString());
                 startActivity(intent);
             } else {
-//                errMsg.setText("wrong username or password.\n" +
-//                        "might be waiting for response from the web.\n" +
-//                        "if that is the case, wait a few seconds and try again.");
                 return;
             }
-//            User u = appViewModel.getUserById(edUserId.getText().toString());
-//            if (u == null || !(u.getPassword().equals(edPassword.getText().toString()))) {
-//                errMsg.setText("wrong username or password");
-//            } else {
-//                Intent intent = new Intent(this, ContactsActivity.class);
-//                intent.putExtra("username", edUserId.getText().toString());
-//                startActivity(intent);
-//            }
         });
 
         btnToRegister.setOnClickListener(v -> {

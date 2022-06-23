@@ -1,6 +1,7 @@
 package advancedprog2.messageappandroid.database_classes;
 
 import android.app.Application;
+import android.icu.text.StringPrepParseException;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -57,6 +58,10 @@ public class AppViewModel extends AndroidViewModel {
     public void sendMessage(String user, String contact, String type, String content, String contactServer) {
         Date now = new Date();
         repository.addMessage(user, contact, type, content, true, now, contactServer);
+    }
+
+    public List<Message> getMessagesAsList(String user, String contact) {
+        return repository.getMessagesAsList(user, contact);
     }
 
 }
