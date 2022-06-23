@@ -94,7 +94,12 @@ public class AppApi {
 
     public void sendMessage(String user, String contact, String contactServer, Message message) {
         ApiFormat af = new ApiFormat(user, contact, message.getContent(), contactServer);
-        Call<Void> call = webAPI.transfer(af);
+        Retrofit  retrofit2 = new Retrofit.Builder()
+                .baseUrl("http://" + contactServer + "/api/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        WebAPI webAPI2 = retrofit2.create(WebAPI.class);
+        Call<Void> call = webAPI2.transfer(af);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {}
