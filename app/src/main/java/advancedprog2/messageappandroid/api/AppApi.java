@@ -1,5 +1,10 @@
 package advancedprog2.messageappandroid.api;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +48,8 @@ public class AppApi {
                     List<Contact> contacts = new ArrayList<>();
                     if (response.body() != null) {
                         for (ApiContact ac : response.body()) {
-                            Contact c = new Contact(ac.id, ac.name, ac.server, ac.last, ac.lastdate, user);
+                            DateTime dt = new DateTime(ac.lastdate);
+                            Contact c = new Contact(ac.id, ac.name, ac.server, ac.last, dt.toString(DateTimeFormat.forPattern("d.M.y H:m")), user);
                             contacts.add(c);
                         }
                     }
@@ -66,7 +72,8 @@ public class AppApi {
                    List<Message> messages = new ArrayList<>();
                    if (response.body() != null) {
                        for (ApiMessage am : response.body()) {
-                           Message m = new Message(am.content, am.created, am.sent, user_contact);
+                           DateTime dt = new DateTime( am.created ) ;
+                           Message m = new Message(am.content, dt.toString(DateTimeFormat.forPattern("d.M.y H:m")), am.sent, user_contact);
                            messages.add(m);
                        }
                    }

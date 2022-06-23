@@ -28,9 +28,11 @@ android {
     }
 }
 
+
+
 dependencies {
     def lifecycle_version = "2.5.0-rc02"
-
+    implementation 'joda-time:joda-time:2.10.14'
     implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
