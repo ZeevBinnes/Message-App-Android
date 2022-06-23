@@ -9,6 +9,7 @@ and an android application.
 clone the repository, and open it with android studio. make sure you have `Firebase` installed on your IDE.
 
 With Visual Studio, open the sub directory `Advanced_Programming_2_ex2` and open the solution `MessageApp.sln`.
+In the package manager, type "Update-Database", to update your database to fit ours.
 
 Run the server from VS, and run the application on android studio.
 In order to get to the browser app, use your browser and browse to "localhost:5180".
