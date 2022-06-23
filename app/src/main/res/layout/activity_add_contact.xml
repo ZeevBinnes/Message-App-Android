@@ -25,7 +25,7 @@
             android:id="@+id/addContact_contactName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="contact's nickname"
+            android:hint="contact's name"
             />
 
         <EditText

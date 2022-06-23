@@ -24,6 +24,7 @@ public class AppViewModel extends AndroidViewModel {
     public LiveData<UserWithContacts> getContacts(String username) {
         return repository.getUserWithContacts(username);
     }
+
     public LiveData<List<Message>> getMessages(String user, String contact) {
         return repository.getContactsMessages(user, contact);
     }
@@ -52,13 +53,5 @@ public class AppViewModel extends AndroidViewModel {
         Date now = new Date();
         repository.addMessage(user, contact, type, content, true, now, contactServer);
     }
-
-//    public LiveData<List<ContactToShow>> getContacts(String username) {
-//        return repository.getContacts(username);
-//    }
-//
-//    public LiveData<List<Message>> getMessages(String username, String contactId) {
-//        return repository.getMessages(username, contactId);
-//    }
 
 }

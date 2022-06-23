@@ -41,6 +41,13 @@ public class ContactsActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        ImageButton settingsBtn = findViewById(R.id.btnSettings);
+        settingsBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            intent.putExtra("username", username);
+            startActivity(intent);
+        });
+
 
         RecyclerView contactsListLayout = findViewById(R.id.contactsList);
         final ContactsListAdapter adapter = new ContactsListAdapter(this, username);
