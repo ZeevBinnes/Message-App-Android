@@ -38,7 +38,7 @@ public class AppApi {
         this.repository = repo;
 
         retrofit = new Retrofit.Builder()
-                .baseUrl(Session.server)
+                .baseUrl("http://" + Session.server + "/api/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         webAPI = retrofit.create(WebAPI.class);
@@ -116,7 +116,7 @@ public class AppApi {
 
     public boolean addContact(String username, Contact contact) {
         final boolean[] didAdd = {false};
-        ApiFormat af = new ApiFormat(username, contact.getId(), null, "localhost:5180");
+        ApiFormat af = new ApiFormat(username, contact.getId(), null, Session.server);
         Call<Void> call1 = webAPI.Invitation(af);
         call1.enqueue(new Callback<Void>() {
             @Override
